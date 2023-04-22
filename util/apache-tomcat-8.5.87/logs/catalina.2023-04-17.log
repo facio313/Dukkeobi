@@ -1,0 +1,284 @@
+17-Apr-2023 16:02:16.693 경고 [main] org.apache.catalina.core.StandardContext.setPath 컨텍스트 경로는 반드시 빈 문자열이거나, 또는 '/'로 시작하고 '/'로 끝나지 않는 문자열이어야 합니다. 해당 경로 [/]은(는) 이 조건을 충족시키지 않아 [](으)로 변경되었습니다.
+17-Apr-2023 16:02:16.711 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 서버 버전 이름:    Apache Tomcat/8.5.87
+17-Apr-2023 16:02:16.744 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 빌드 시각:  Feb 27 2023 19:32:33 UTC
+17-Apr-2023 16:02:16.744 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 버전 번호:  8.5.87.0
+17-Apr-2023 16:02:16.744 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 이름:     Windows 10
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 버전:     10.0
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 아키텍처:          amd64
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 자바 홈:           C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 버전:          1.8.0_222-2-ojdkbuild-b10
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 벤더:          
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:02:16.745 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.config.file=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\conf\logging.properties
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djdk.tls.ephemeralDHKeySize=2048
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dignore.endorsed.dirs=
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.base=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:02:16.746 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.home=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:02:16.747 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.io.tmpdir=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\temp
+17-Apr-2023 16:02:16.747 정보 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent 프로덕션 환경들에서 최적의 성능을 제공하는, APR 기반 Apache Tomcat Native 라이브러리가, 다음 java.library.path에서 발견되지 않습니다: [C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Python311\Scripts\;C:\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\10\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Users\facci\AppData\Local\Microsoft\WindowsApps;;C:\Users\facci\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\facci\AppData\Roaming\npm;.]
+17-Apr-2023 16:02:16.841 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["http-nio-8080"]을(를) 초기화합니다.
+17-Apr-2023 16:02:16.857 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 초기화합니다.
+17-Apr-2023 16:02:16.858 정보 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 428 ms
+17-Apr-2023 16:02:16.877 정보 [main] org.apache.catalina.core.StandardService.startInternal 서비스 [Catalina]을(를) 시작합니다.
+17-Apr-2023 16:02:16.877 정보 [main] org.apache.catalina.core.StandardEngine.startInternal 서버 엔진을 시작합니다: [Apache Tomcat/8.5.87]
+17-Apr-2023 16:02:17.108 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]을(를) 배치합니다.
+17-Apr-2023 16:02:17.127 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]에 대한 배치가 [18] 밀리초에 완료되었습니다.
+17-Apr-2023 16:02:17.129 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["http-nio-8080"]을(를) 시작합니다.
+17-Apr-2023 16:02:17.170 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 시작합니다.
+17-Apr-2023 16:02:17.171 정보 [main] org.apache.catalina.startup.Catalina.start Server startup in 313 ms
+17-Apr-2023 16:03:37.963 정보 [main] org.apache.catalina.core.StandardServer.await 셧다운 포트를 통해 유효한 셧다운 명령을 받았습니다. 서버 인스턴스를 중지시킵니다.
+17-Apr-2023 16:03:37.963 정보 [main] org.apache.coyote.AbstractProtocol.pause 프로토콜 핸들러 ["http-nio-8080"]을(를) 일시 정지 중
+17-Apr-2023 16:03:38.039 정보 [main] org.apache.coyote.AbstractProtocol.pause 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 일시 정지 중
+17-Apr-2023 16:03:38.039 정보 [main] org.apache.catalina.core.StandardService.stopInternal 서비스 [Catalina]을(를) 중지시킵니다.
+17-Apr-2023 16:03:38.049 정보 [main] org.apache.coyote.AbstractProtocol.stop 프로토콜 핸들러 ["http-nio-8080"]을(를) 중지시킵니다.
+17-Apr-2023 16:03:38.064 정보 [main] org.apache.coyote.AbstractProtocol.stop 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 중지시킵니다.
+17-Apr-2023 16:03:38.081 정보 [main] org.apache.coyote.AbstractProtocol.destroy 프로토콜 핸들러 ["http-nio-8080"]을(를) 소멸시킵니다.
+17-Apr-2023 16:03:38.082 정보 [main] org.apache.coyote.AbstractProtocol.destroy 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 소멸시킵니다.
+17-Apr-2023 16:35:05.701 경고 [main] org.apache.catalina.core.StandardContext.setPath 컨텍스트 경로는 반드시 빈 문자열이거나, 또는 '/'로 시작하고 '/'로 끝나지 않는 문자열이어야 합니다. 해당 경로 [/]은(는) 이 조건을 충족시키지 않아 [](으)로 변경되었습니다.
+17-Apr-2023 16:35:05.718 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 서버 버전 이름:    Apache Tomcat/8.5.87
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 빌드 시각:  Feb 27 2023 19:32:33 UTC
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 버전 번호:  8.5.87.0
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 이름:     Windows 10
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 버전:     10.0
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 아키텍처:          amd64
+17-Apr-2023 16:35:05.751 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 자바 홈:           C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 버전:          1.8.0_222-2-ojdkbuild-b10
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 벤더:          
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.config.file=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\conf\logging.properties
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+17-Apr-2023 16:35:05.752 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djdk.tls.ephemeralDHKeySize=2048
+17-Apr-2023 16:35:05.753 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+17-Apr-2023 16:35:05.753 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dignore.endorsed.dirs=
+17-Apr-2023 16:35:05.753 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.base=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:35:05.753 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.home=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 16:35:05.753 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.io.tmpdir=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\temp
+17-Apr-2023 16:35:05.754 정보 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent 프로덕션 환경들에서 최적의 성능을 제공하는, APR 기반 Apache Tomcat Native 라이브러리가, 다음 java.library.path에서 발견되지 않습니다: [C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Python311\Scripts\;C:\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\10\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Users\facci\AppData\Local\Microsoft\WindowsApps;;C:\Users\facci\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\facci\AppData\Roaming\npm;.]
+17-Apr-2023 16:35:05.850 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["http-nio-8080"]을(를) 초기화합니다.
+17-Apr-2023 16:35:05.864 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 초기화합니다.
+17-Apr-2023 16:35:05.865 정보 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 424 ms
+17-Apr-2023 16:35:05.886 정보 [main] org.apache.catalina.core.StandardService.startInternal 서비스 [Catalina]을(를) 시작합니다.
+17-Apr-2023 16:35:05.887 정보 [main] org.apache.catalina.core.StandardEngine.startInternal 서버 엔진을 시작합니다: [Apache Tomcat/8.5.87]
+17-Apr-2023 16:35:06.124 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]을(를) 배치합니다.
+17-Apr-2023 16:35:06.142 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]에 대한 배치가 [18] 밀리초에 완료되었습니다.
+17-Apr-2023 16:35:06.144 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["http-nio-8080"]을(를) 시작합니다.
+17-Apr-2023 16:35:06.186 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 시작합니다.
+17-Apr-2023 16:35:06.187 정보 [main] org.apache.catalina.startup.Catalina.start Server startup in 322 ms
+17-Apr-2023 16:36:24.831 심각 [ajp-nio-127.0.0.1-8009-exec-3] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:36:25.846 심각 [ajp-nio-127.0.0.1-8009-exec-4] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:36:25.848 심각 [ajp-nio-127.0.0.1-8009-exec-5] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:36:26.161 심각 [ajp-nio-127.0.0.1-8009-exec-6] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:36:31.173 심각 [ajp-nio-127.0.0.1-8009-exec-7] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:36:31.481 심각 [ajp-nio-127.0.0.1-8009-exec-8] org.apache.coyote.ajp.AjpMessage.processHeader 서명 [18245]와(과) 함께, 유효하지 않은 메시지를 받았습니다.
+17-Apr-2023 16:37:11.525 심각 [main] org.apache.catalina.startup.Catalina.stopServer [localhost:8005] (base 포트 [8005] 그리고 offset [0])와(과) 연결할 수 없었습니다. Tomcat이 실행 중이지 않을 수 있습니다.
+17-Apr-2023 16:37:11.556 심각 [main] org.apache.catalina.startup.Catalina.stopServer Catalina를 중지시키는 중 오류 발생
+	java.net.ConnectException: Connection refused: connect
+		at java.net.DualStackPlainSocketImpl.connect0(Native Method)
+		at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:79)
+		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+		at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+		at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+		at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+		at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+		at java.net.Socket.connect(Socket.java:589)
+		at java.net.Socket.connect(Socket.java:538)
+		at java.net.Socket.<init>(Socket.java:434)
+		at java.net.Socket.<init>(Socket.java:211)
+		at org.apache.catalina.startup.Catalina.stopServer(Catalina.java:511)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.stopServer(Bootstrap.java:393)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:483)
+17-Apr-2023 16:37:26.026 심각 [main] org.apache.catalina.startup.Catalina.stopServer [localhost:8005] (base 포트 [8005] 그리고 offset [0])와(과) 연결할 수 없었습니다. Tomcat이 실행 중이지 않을 수 있습니다.
+17-Apr-2023 16:37:26.037 심각 [main] org.apache.catalina.startup.Catalina.stopServer Catalina를 중지시키는 중 오류 발생
+	java.net.ConnectException: Connection refused: connect
+		at java.net.DualStackPlainSocketImpl.connect0(Native Method)
+		at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:79)
+		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+		at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+		at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+		at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+		at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+		at java.net.Socket.connect(Socket.java:589)
+		at java.net.Socket.connect(Socket.java:538)
+		at java.net.Socket.<init>(Socket.java:434)
+		at java.net.Socket.<init>(Socket.java:211)
+		at org.apache.catalina.startup.Catalina.stopServer(Catalina.java:511)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.stopServer(Bootstrap.java:393)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:483)
+17-Apr-2023 18:09:22.032 경고 [main] org.apache.catalina.core.StandardContext.setPath 컨텍스트 경로는 반드시 빈 문자열이거나, 또는 '/'로 시작하고 '/'로 끝나지 않는 문자열이어야 합니다. 해당 경로 [/]은(는) 이 조건을 충족시키지 않아 [](으)로 변경되었습니다.
+17-Apr-2023 18:09:22.058 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 서버 버전 이름:    Apache Tomcat/8.5.87
+17-Apr-2023 18:09:22.091 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 빌드 시각:  Feb 27 2023 19:32:33 UTC
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 버전 번호:  8.5.87.0
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 이름:     Windows 10
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 버전:     10.0
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 아키텍처:          amd64
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 자바 홈:           C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 버전:          1.8.0_222-2-ojdkbuild-b10
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 벤더:          
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:22.092 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.config.file=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\conf\logging.properties
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djdk.tls.ephemeralDHKeySize=2048
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dignore.endorsed.dirs=
+17-Apr-2023 18:09:22.093 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.base=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:22.094 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.home=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:22.094 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.io.tmpdir=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\temp
+17-Apr-2023 18:09:22.094 정보 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent 프로덕션 환경들에서 최적의 성능을 제공하는, APR 기반 Apache Tomcat Native 라이브러리가, 다음 java.library.path에서 발견되지 않습니다: [C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Python311\Scripts\;C:\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\10\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Users\facci\AppData\Local\Microsoft\WindowsApps;;C:\Users\facci\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\facci\AppData\Roaming\npm;.]
+17-Apr-2023 18:09:22.192 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["http-nio-8080"]을(를) 초기화합니다.
+17-Apr-2023 18:09:22.200 심각 [main] org.apache.catalina.core.StandardService.initInternal Failed to initialize connector [Connector[HTTP/1.1-8080]]
+	org.apache.catalina.LifecycleException: 프로토콜 핸들러 초기화가 실패했습니다.
+		at org.apache.catalina.connector.Connector.initInternal(Connector.java:1075)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.core.StandardService.initInternal(StandardService.java:559)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.core.StandardServer.initInternal(StandardServer.java:857)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.startup.Catalina.load(Catalina.java:646)
+		at org.apache.catalina.startup.Catalina.load(Catalina.java:669)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.load(Bootstrap.java:307)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:477)
+	Caused by: java.net.BindException: Address already in use: bind
+		at sun.nio.ch.Net.bind0(Native Method)
+		at sun.nio.ch.Net.bind(Net.java:433)
+		at sun.nio.ch.Net.bind(Net.java:425)
+		at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:223)
+		at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+		at org.apache.tomcat.util.net.NioEndpoint.initServerSocket(NioEndpoint.java:226)
+		at org.apache.tomcat.util.net.NioEndpoint.bind(NioEndpoint.java:202)
+		at org.apache.tomcat.util.net.AbstractEndpoint.bindWithCleanup(AbstractEndpoint.java:1296)
+		at org.apache.tomcat.util.net.AbstractEndpoint.init(AbstractEndpoint.java:1309)
+		at org.apache.tomcat.util.net.AbstractJsseEndpoint.init(AbstractJsseEndpoint.java:231)
+		at org.apache.coyote.AbstractProtocol.init(AbstractProtocol.java:693)
+		at org.apache.coyote.http11.AbstractHttp11Protocol.init(AbstractHttp11Protocol.java:76)
+		at org.apache.catalina.connector.Connector.initInternal(Connector.java:1073)
+		... 13 more
+17-Apr-2023 18:09:22.202 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 초기화합니다.
+17-Apr-2023 18:09:22.203 심각 [main] org.apache.catalina.core.StandardService.initInternal Failed to initialize connector [Connector[AJP/1.3-8009]]
+	org.apache.catalina.LifecycleException: 프로토콜 핸들러 초기화가 실패했습니다.
+		at org.apache.catalina.connector.Connector.initInternal(Connector.java:1075)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.core.StandardService.initInternal(StandardService.java:559)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.core.StandardServer.initInternal(StandardServer.java:857)
+		at org.apache.catalina.util.LifecycleBase.init(LifecycleBase.java:136)
+		at org.apache.catalina.startup.Catalina.load(Catalina.java:646)
+		at org.apache.catalina.startup.Catalina.load(Catalina.java:669)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.load(Bootstrap.java:307)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:477)
+	Caused by: java.net.BindException: Address already in use: bind
+		at sun.nio.ch.Net.bind0(Native Method)
+		at sun.nio.ch.Net.bind(Net.java:433)
+		at sun.nio.ch.Net.bind(Net.java:425)
+		at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:223)
+		at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+		at org.apache.tomcat.util.net.NioEndpoint.initServerSocket(NioEndpoint.java:226)
+		at org.apache.tomcat.util.net.NioEndpoint.bind(NioEndpoint.java:202)
+		at org.apache.tomcat.util.net.AbstractEndpoint.bindWithCleanup(AbstractEndpoint.java:1296)
+		at org.apache.tomcat.util.net.AbstractEndpoint.init(AbstractEndpoint.java:1309)
+		at org.apache.tomcat.util.net.AbstractJsseEndpoint.init(AbstractJsseEndpoint.java:231)
+		at org.apache.coyote.AbstractProtocol.init(AbstractProtocol.java:693)
+		at org.apache.catalina.connector.Connector.initInternal(Connector.java:1073)
+		... 13 more
+17-Apr-2023 18:09:22.203 정보 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 434 ms
+17-Apr-2023 18:09:22.223 정보 [main] org.apache.catalina.core.StandardService.startInternal 서비스 [Catalina]을(를) 시작합니다.
+17-Apr-2023 18:09:22.223 정보 [main] org.apache.catalina.core.StandardEngine.startInternal 서버 엔진을 시작합니다: [Apache Tomcat/8.5.87]
+17-Apr-2023 18:09:22.455 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]을(를) 배치합니다.
+17-Apr-2023 18:09:22.473 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]에 대한 배치가 [17] 밀리초에 완료되었습니다.
+17-Apr-2023 18:09:22.474 정보 [main] org.apache.catalina.startup.Catalina.start Server startup in 271 ms
+17-Apr-2023 18:09:22.475 심각 [main] org.apache.catalina.core.StandardServer.await 주소 [localhost]와(과) 포트 [8005]에, 서버 셧다운 소켓을 생성하지 못했습니다. (base 포트 [8005], offset [0])
+	java.net.BindException: Address already in use: JVM_Bind
+		at java.net.DualStackPlainSocketImpl.bind0(Native Method)
+		at java.net.DualStackPlainSocketImpl.socketBind(DualStackPlainSocketImpl.java:106)
+		at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:387)
+		at java.net.PlainSocketImpl.bind(PlainSocketImpl.java:190)
+		at java.net.ServerSocket.bind(ServerSocket.java:375)
+		at java.net.ServerSocket.<init>(ServerSocket.java:237)
+		at org.apache.catalina.core.StandardServer.await(StandardServer.java:444)
+		at org.apache.catalina.startup.Catalina.await(Catalina.java:783)
+		at org.apache.catalina.startup.Catalina.start(Catalina.java:729)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:347)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:478)
+17-Apr-2023 18:09:22.475 정보 [main] org.apache.coyote.AbstractProtocol.pause 프로토콜 핸들러 ["http-nio-8080"]을(를) 일시 정지 중
+17-Apr-2023 18:09:22.476 정보 [main] org.apache.coyote.AbstractProtocol.pause 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 일시 정지 중
+17-Apr-2023 18:09:22.476 정보 [main] org.apache.catalina.core.StandardService.stopInternal 서비스 [Catalina]을(를) 중지시킵니다.
+17-Apr-2023 18:09:22.483 정보 [main] org.apache.coyote.AbstractProtocol.stop 프로토콜 핸들러 ["http-nio-8080"]을(를) 중지시킵니다.
+17-Apr-2023 18:09:22.484 정보 [main] org.apache.coyote.AbstractProtocol.destroy 프로토콜 핸들러 ["http-nio-8080"]을(를) 소멸시킵니다.
+17-Apr-2023 18:09:22.484 정보 [main] org.apache.coyote.AbstractProtocol.stop 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 중지시킵니다.
+17-Apr-2023 18:09:22.484 정보 [main] org.apache.coyote.AbstractProtocol.destroy 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 소멸시킵니다.
+17-Apr-2023 18:09:39.224 경고 [main] org.apache.catalina.core.StandardContext.setPath 컨텍스트 경로는 반드시 빈 문자열이거나, 또는 '/'로 시작하고 '/'로 끝나지 않는 문자열이어야 합니다. 해당 경로 [/]은(는) 이 조건을 충족시키지 않아 [](으)로 변경되었습니다.
+17-Apr-2023 18:09:39.241 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 서버 버전 이름:    Apache Tomcat/8.5.87
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 빌드 시각:  Feb 27 2023 19:32:33 UTC
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server 버전 번호:  8.5.87.0
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 이름:     Windows 10
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 운영체제 버전:     10.0
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 아키텍처:          amd64
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 자바 홈:           C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 버전:          1.8.0_222-2-ojdkbuild-b10
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM 벤더:          
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:39.242 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:     C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.config.file=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\conf\logging.properties
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djdk.tls.ephemeralDHKeySize=2048
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dignore.endorsed.dirs=
+17-Apr-2023 18:09:39.243 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.base=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:39.244 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Dcatalina.home=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87
+17-Apr-2023 18:09:39.244 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log 명령 행 아규먼트:  -Djava.io.tmpdir=C:\Users\facci\Desktop\Dukkeobi\util\apache-tomcat-8.5.87\temp
+17-Apr-2023 18:09:39.244 정보 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent 프로덕션 환경들에서 최적의 성능을 제공하는, APR 기반 Apache Tomcat Native 라이브러리가, 다음 java.library.path에서 발견되지 않습니다: [C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Python311\Scripts\;C:\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\10\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.222-2\jre\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Users\facci\AppData\Local\Microsoft\WindowsApps;;C:\Users\facci\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\facci\AppData\Roaming\npm;.]
+17-Apr-2023 18:09:39.361 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["http-nio-8080"]을(를) 초기화합니다.
+17-Apr-2023 18:09:39.376 정보 [main] org.apache.coyote.AbstractProtocol.init 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 초기화합니다.
+17-Apr-2023 18:09:39.377 정보 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 423 ms
+17-Apr-2023 18:09:39.396 정보 [main] org.apache.catalina.core.StandardService.startInternal 서비스 [Catalina]을(를) 시작합니다.
+17-Apr-2023 18:09:39.396 정보 [main] org.apache.catalina.core.StandardEngine.startInternal 서버 엔진을 시작합니다: [Apache Tomcat/8.5.87]
+17-Apr-2023 18:09:39.631 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]을(를) 배치합니다.
+17-Apr-2023 18:09:39.649 정보 [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory 웹 애플리케이션 디렉토리 [C:\Users\facci\Desktop\Dukkeobi\source\Dukkeobi\webapp\resources\js]에 대한 배치가 [17] 밀리초에 완료되었습니다.
+17-Apr-2023 18:09:39.650 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["http-nio-8080"]을(를) 시작합니다.
+17-Apr-2023 18:09:39.690 정보 [main] org.apache.coyote.AbstractProtocol.start 프로토콜 핸들러 ["ajp-nio-127.0.0.1-8009"]을(를) 시작합니다.
+17-Apr-2023 18:09:39.692 정보 [main] org.apache.catalina.startup.Catalina.start Server startup in 314 ms
+17-Apr-2023 18:14:11.440 심각 [main] org.apache.catalina.startup.Catalina.stopServer [localhost:8005] (base 포트 [8005] 그리고 offset [0])와(과) 연결할 수 없었습니다. Tomcat이 실행 중이지 않을 수 있습니다.
+17-Apr-2023 18:14:11.471 심각 [main] org.apache.catalina.startup.Catalina.stopServer Catalina를 중지시키는 중 오류 발생
+	java.net.ConnectException: Connection refused: connect
+		at java.net.DualStackPlainSocketImpl.connect0(Native Method)
+		at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:79)
+		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+		at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+		at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+		at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+		at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+		at java.net.Socket.connect(Socket.java:589)
+		at java.net.Socket.connect(Socket.java:538)
+		at java.net.Socket.<init>(Socket.java:434)
+		at java.net.Socket.<init>(Socket.java:211)
+		at org.apache.catalina.startup.Catalina.stopServer(Catalina.java:511)
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.apache.catalina.startup.Bootstrap.stopServer(Bootstrap.java:393)
+		at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:483)

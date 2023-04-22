@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두꺼비 : 새집 다오</title>
+<style>
+	#map {
+		width: 100%;
+		height: 75vh;
+		border: 1px solid red;
+	}
+</style>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+<script>
+const map = new ol.Map({
+	target: 'map',
+	layers: [
+		new ol.layer.Tile({
+		source: new ol.source.OSM()
+	})],
+	view: new ol.View({
+	    projection: ol.proj.get('EPSG:3857'),
+		center: [0, 0],
+		zoom: 2
+	})
+});
+
+function addWMS_emd(){
+	const layer = new ol.layer.Tile({
+		source: new TileWMS({
+			url: 'http://localhost:8888/geoserver/wms',
+			params: {'LAYERS': 'test:admin_emd', 'VERSION': '1.1.1', 'SRS': 'EPSG:3857'}
+	    }),
+	});
+	map.addLayer(layer);
+}
+addWMS_emd();
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두꺼비 : 새집 다오</title>
+<style>
+	#map {
+		width: 50%;
+		height: auto;
+	}
+</style>
+</head>
+<body>
+	<div id="map" class="map"></div>
+</body>
+</html>

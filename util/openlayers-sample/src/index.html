@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using Parcel with OpenLayers</title>
+    <style>
+      #map {
+        width: 100vw;
+        height: 1000px;
+      }
+      #info {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        z-index: 99999;
+        width: 100vw;
+        height: 100px;
+      }
+      .popover-body {
+        min-width: 276px;
+      }      
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="info"></div>
+    <div id="popup"></div>
+    <script src="https://cdn.jsdelivr.net/npm/jsts@2.3.0/dist/jsts.min.js"></script>
+  </body>
+</html>

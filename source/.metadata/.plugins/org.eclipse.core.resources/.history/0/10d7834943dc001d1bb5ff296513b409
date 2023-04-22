@@ -1,0 +1,25 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두꺼비 : 새집 다오</title>
+</head>
+<body>
+왜 안 나와
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+<script>
+const map = new ol.Map({
+	target: 'map',
+	layers: [
+		new ol.layer.Tile({
+		source: new ol.source.OSM()
+	})],
+	view: new ol.View({
+		center: [0, 0],
+		zoom: 2
+	})
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+
+	<mvc:annotation-driven /> 
+
+	<!-- HandlerMapping, HandlerAdapter, ViewResolver, Validator 등의 MVC 프로그래밍 모델에서 사용될 전략 객체들이 자동 등록됨. -->
+	<!-- ViewResolver에 prefix와 suffix를 설정하기 위한 bean -->
+	   <bean id="IRVR" class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+	      p:prefix="/WEB-INF/views/"
+	      p:suffix=".jsp"
+	   />
+	   
+	   <bean id="BNVR" class="org.springframework.web.servlet.view.BeanNameViewResolver" 
+	      p:order="1"
+	   />
+	   
+	   <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	
+	<!-- Controller layer를 bean으로 등록하기 위한 필터링 설정 -->
+		<context:component-scan base-package="kr.or.forcewave" use-default-filters="false">
+			<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+			<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>		
+		</context:component-scan>
+	<!-- 인터셉터한 로케일을 쿠키에 저장하기 위한 bean(id에서 한글자만 오타나도 못 찾음) -->
+	<!-- LocaleChangeInterceptor가 변경한 로케일 정보를 저장하기 위해 사용하는 전략객체 -->
+		<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" 
+			p:cookieName="localeCookie"
+			p:cookiePath="/"
+			p:cookieMaxAge="#{60*60*24*5}"
+		/>
+	<!-- HandlerInterceptor : 스프링 컨테이너 밖에 존재하는 웹 필터의 역할을 대신하는 객체 -->
+		<mvc:interceptors> <!-- filterChain의 역할 -->
+			<mvc:interceptor>
+				<mvc:mapping path="/**"/>
+	<!-- 		language라는 이름의 요청 파라미터를 기준으로 현재 로케일을 변경하기 위한 인터셉터 -->
+				<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+					p:paramName="language"
+				/>
+			</mvc:interceptor>
+		</mvc:interceptors>
+	<!-- 정적 자원이 일괄 관리 되는 경우, 정적자원을 처리하기 위한 방법 -->
+		<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0"></mvc:resources>
+		
+</beans>

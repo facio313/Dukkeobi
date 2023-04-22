@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두꺼비 : 새집 다오</title>
+<style>
+	#map {
+		width: 50%;
+		height: auto;
+	}
+</style>
+</head>
+<body>
+	<div id="map" class="map"></div>
+	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/js/bootstrap-5.2.3-dist/css/bootstrap.min.css">    
+	<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-3.6.1.min.js"></script>
+</body>
+</html>
