@@ -1,0 +1,41 @@
+<featureType>
+  <id>FeatureTypeInfoImpl-38f56a13:187acae07e9:-7fed</id>
+  <name>mapogu_emd</name>
+  <nativeName>mapogu_emd</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--1c1602e3:1879c268c9a:-7ffe</id>
+  </namespace>
+  <title>mapogu_emd</title>
+  <keywords>
+    <string>features</string>
+    <string>mapogu_emd</string>
+  </keywords>
+  <srs>EPSG:3857</srs>
+  <nativeBoundingBox>
+    <minx>1.4121281E7</minx>
+    <maxx>1.4133564E7</maxx>
+    <miny>4513773.0</miny>
+    <maxy>4521779.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>126.853625536466</minx>
+    <maxx>126.96396560281438</maxx>
+    <miny>37.53378490465721</miny>
+    <maxy>37.590794543579236</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl--1c1602e3:1879c268c9a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <simpleConversionEnabled>false</simpleConversionEnabled>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

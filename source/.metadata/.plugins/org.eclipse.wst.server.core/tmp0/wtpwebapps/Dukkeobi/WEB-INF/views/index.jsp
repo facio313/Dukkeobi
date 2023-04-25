@@ -3,58 +3,75 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
-<c:set value="${pageContext.request.contextPath}" var="context"/>
 <title>두꺼비 : 새집 다오</title>
-<style>
-	#map {
-		width: 100%;
-		height: 100vh;
-		border: 1px solid red;
-	}
-</style>
+
+<c:set value="${pageContext.request.contextPath}" var="context"/>
+
 <link rel="stylesheet" href="${context}/resources/js/bootstrap-5.2.3-dist/css/bootstrap.min.css">    
-<link rel="stylesheet" href="${context}/resources/js/ol/ol.css">    
+<link rel="stylesheet" href="${context}/resources/js/ol/ol.css">
+<link rel="stylesheet" href="${context}/resources/css/index.css">
+
 </head>
 <body>
-<div id="map" class="map"></div>
+
+<div id="map">
+
+	<!-- 배경장막 -->
+	<div id="veil" class="veiled"></div>
+	
+	<!-- 대메뉴 -->
+	<div id="menu" class="tile bigMenu">
+		<input type="text" id="search" class="bigMenuSearch" placeholder="키워드로 검색하기"/>
+		<button id="inquire" class="menuBtn bigMenuBtn">주거 현황 조회</button>
+		<button id="observe" class="menuBtn bigMenuBtn">주거적지 탐색</button>
+		<button id="analyze" class="menuBtn bigMenuBtn">주거적지 분석</button>
+		<button id="history" class="menuBtn bigMenuBtn">분석 결과 내역</button>		
+	</div>
+	
+	<!-- 사이드 메뉴 -->
+	<div id="side" class="tile">
+		<button class="backBtn">←</button>
+		<div id="search1" class="tile sideMenu fold1">
+			<div class="sideHeader">지역선택</div>
+			<select class="form-control selectForm"></select>
+			<select id="selectSgg" class="form-control selectForm"></select>
+			<select class="form-control selectForm"></select>
+			<div class="resultForm">
+				선택한 주소 : 
+				<span id="resultSido">시/도 </span>
+				<span id="resultSgg">시/군/구</span>
+				<span id="resultEmd">읍/면/동</span>
+			</div>
+			<button id="searchBtn1" class="btn btn-primary searchBtn">검색</button>
+		</div>
+		<div id="safety1" class="tile sideMenu unfold1">
+			<div class="sideHeader">안전현황</div>
+		
+		</div>
+		<div id="poi1" class="tile sideMenu unfold1">
+			<div class="sideHeader">주요지점</div>
+
+		</div>
+		<div id="cost1" class="tile sideMenu unfold1">
+			<div class="sideHeader">실거래가</div>
+		
+		</div>
+	</div>
+	
+</div>
+<div id="info"></div>
+<div id="popup"></div>
+
 <script src="${context}/resources/js/ol/ol.js"></script>
 <script src="${context}/resources/js/ol/jsts.min.js"></script>
 <script src="${context}/resources/js/ol/proj4js-2.3.14.js"></script>
+<script src="${context}/resources/js/jquery-3.6.1.min.js"></script>
+<script src="${context}/resources/js/index.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script>
-proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
-ol.proj.proj4.register(proj4);
-
-const map = new ol.Map({
-	target: 'map',
-	layers: [
-		new ol.layer.Tile({
-		source: new ol.source.OSM()
-	})],
-	view: new ol.View({
-	    projection: ol.proj.get('EPSG:5181'),
-	    center: [199930.2755757971,444198.8519182416],
-	    zoom: 12
-	})
-});
-
-
-
-function addWMS(url){
-  	const layer = new ol.layer.Tile({
-    	source: new ol.source.TileWMS({
-      		url: url,
-      		params: {'LAYERS': 'A2SM_CrmnlHspot_Tot_Tot',
-               	'styles': 'A2SM_CrmnlHspot_Tot_Tot'
-            },
-    	}),
-	});
-  map.addLayer(layer);
-}
-
-addWMS('http://www.safemap.go.kr/openApiService/wms/getLayerData.do?apikey=LPGGTEYH-LPGG-LPGG-LPGG-LPGGTEYH1M');
-
-
 
 </script>
 </body>

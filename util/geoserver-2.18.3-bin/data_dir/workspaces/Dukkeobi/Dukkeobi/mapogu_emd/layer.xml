@@ -1,0 +1,16 @@
+<layer>
+  <name>mapogu_emd</name>
+  <id>LayerInfoImpl-38f56a13:187acae07e9:-7fec</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-38f56a13:187acae07e9:-7fed</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2023-04-24 07:54:59.193 UTC</dateCreated>
+</layer>
