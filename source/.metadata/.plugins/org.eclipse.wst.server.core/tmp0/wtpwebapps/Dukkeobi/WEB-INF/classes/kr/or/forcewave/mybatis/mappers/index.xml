@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.forcewave.index.dao.IndexDAO">
+	
+	<select id="selectXY" parameterType="String" resultType="hashMap">
+		SELECT
+			CAST(ADM_X AS VARCHAR) X
+			, CAST(ADM_Y AS VARCHAR) Y
+		FROM MAPOGU_EMD
+		WHERE ADM_NM = #{admNm}
+	</select>
+	
+</mapper>

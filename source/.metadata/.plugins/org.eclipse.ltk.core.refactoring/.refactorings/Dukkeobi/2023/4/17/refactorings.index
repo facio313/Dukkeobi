@@ -4,3 +4,31 @@
 1682250047475	Rename resource 'index.jsp'
 1682250081799	Delete element
 1682250083943	Rename resource 'index1.css'
+1682488513661	Copy file
+1682553923698	Move compilation unit
+1682572332269	Copy file
+1682584745116	Rename resource 'addSafety.jsp'
+1682584754118	Move 'form.jsp' to 'safety'
+1682665390745	Move 3 resources to 'css'
+1682665396702	Move 3 resources to 'images'
+1682665398776	Move 'images' to 'css'
+1682665418708	Move 'total.png' to 'css'
+1682665420545	Move 'total.svg' to 'css'
+1682665422395	Delete element
+1682665446614	Move 'total.png' to 'resources'
+1682665448567	Move 'total.svg' to 'resources'
+1682665503318	Delete elements
+1682665656382	Rename resource 'image'
+1682668344684	Delete elements
+1682668350475	Rename resource 'total.svg'
+1682668355888	Rename resource 'total2.svg'
+1682749904072	Delete elements
+1682750239173	Delete element
+1682750272422	Rename type 'ConditionVO'
+1682750289841	Rename type 'CondVO'
+1682750294818	Rename type 'CondDetailVO'
+1682750300316	Rename type 'ConditionDetailVO'
+1682750305014	Rename type 'ConditionVO'
+1682752590423	Rename package 'kr.or.forcewave.condition'
+1682752595984	Rename type 'ConditionDAO'
+1682752598389	Rename type 'CondiDAO'

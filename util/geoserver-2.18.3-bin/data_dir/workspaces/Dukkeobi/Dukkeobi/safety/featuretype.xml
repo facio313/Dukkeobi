@@ -1,5 +1,5 @@
 <featureType>
-  <id>FeatureTypeInfoImpl-38f56a13:187acae07e9:-7ff9</id>
+  <id>FeatureTypeInfoImpl-38f56a13:187acae07e9:-7fd5</id>
   <name>safety</name>
   <nativeName>safety</nativeName>
   <namespace>
@@ -33,17 +33,17 @@
   AUTHORITY[&quot;EPSG&quot;,&quot;3857&quot;]]</nativeCRS>
   <srs>EPSG:3857</srs>
   <nativeBoundingBox>
-    <minx>1.4122437E7</minx>
+    <minx>126.90316772460938</minx>
     <maxx>1.4133509E7</maxx>
-    <miny>4514034.5</miny>
-    <maxy>4521472.5</maxy>
+    <miny>37.57231903076172</miny>
+    <maxy>4521131.0</maxy>
     <crs class="projected">EPSG:3857</crs>
   </nativeBoundingBox>
   <latLonBoundingBox>
-    <minx>126.86401006115041</minx>
+    <minx>0.001139990551702</minx>
     <maxx>126.96347152940814</maxx>
-    <miny>37.53564769977802</miny>
-    <maxy>37.58861280185091</maxy>
+    <miny>3.375178844485E-4</miny>
+    <maxy>37.586181846263685</maxy>
     <crs>EPSG:4326</crs>
   </latLonBoundingBox>
   <projectionPolicy>FORCE_DECLARED</projectionPolicy>

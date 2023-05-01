@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="console.log"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="bit"/>
-			<item value="add"/>
-			<item value="remove"/>
-			<item value="test"/>
-			<item value="hiber"/>
-			<item value="mybatis"/>
-			<item value="ajp"/>
-			<item value="&lt;host"/>
-			<item value="host"/>
-			<item value="localhost"/>
-			<item value="secretRequired"/>
+			<item value="console.log"/>
+			<item value="cListTable"/>
+			<item value="cDetail"/>
+			<item value="cList"/>
+			<item value="condition"/>
+			<item value="cContainer"/>
+			<item value="cCont"/>
+			<item value="ccConta"/>
+			<item value="ccContainer"/>
+			<item value="&quot;details&quot;"/>
+			<item value="details"/>
+			<item value="accident"/>
+			<item value="safe"/>
+			<item value="police"/>
+			<item value="console.log("/>
 		</list>
 		<list key="replacehistory">
+			<item value="cdContainer"/>
+			<item value="condDetails"/>
+			<item value="조건을"/>
+			<item value="&quot; "/>
 			<item value="add"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="645"/>
 		<item key="DIALOG_Y_ORIGIN" value="264"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+		<item key="DIALOG_WIDTH" value="418"/>
+		<item key="DIALOG_HEIGHT" value="523"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|5|0|맑은 고딕"/>
 	</section>
 </section>

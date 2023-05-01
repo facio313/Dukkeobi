@@ -1,0 +1,6 @@
+package kr.or.forcewave.safety.vo;
+
+
+public class SafetyVO {
+
+}

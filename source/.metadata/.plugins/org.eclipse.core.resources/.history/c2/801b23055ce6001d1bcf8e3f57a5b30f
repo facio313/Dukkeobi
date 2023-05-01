@@ -1,0 +1,13 @@
+package kr.or.forcewave.condition.vo;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class CondDetailVO {
+	private String condSn;
+	private String cdCode;
+	private String cdDate;
+	private String cdDeleteDate;
+}

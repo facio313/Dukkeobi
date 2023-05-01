@@ -1,3 +1,6 @@
+body {
+	overflow: hidden;
+}
 #map {
 	width: 100vw;
 	height: 100vh;
@@ -9,12 +12,12 @@
 	height: 100%;
 	background-color: rgba(10, 10, 10, 0.8);
 	z-index: 10;
-	transition: all 1s;
+	transition: all 0.8s;
 }
 .unveiled {
 	width: 0%;
 	height: 0%;
-	transition: all 1s;
+	transition: all 0.8s;
 }
 .tile {
 	background-color: rgba(245, 245, 245, 0.9);
@@ -31,7 +34,7 @@
 	width: 40%;
 	height: 90%;
 	border-radius: 50px;
-	transition: all 1s;
+	transition: all 0.8s;
 }
 .smallMenu {
 	top: 1%;
@@ -39,7 +42,7 @@
 	width: 98%;
 	height: 10%;
 	border-radius: 8px;
-	transition: all 1s;
+	transition: all 0.8s;
 }
 #search {
 	border: 2px solid rgb(15, 15, 15);
@@ -108,7 +111,7 @@
 	z-index: 99999;
 	width: 0%;
 	height: 85%;
-	transition: all 1s;
+	transition: all 0.8s;
 	display: flex;
 	justify-content: center;
 	visibility: hidden;
@@ -155,34 +158,303 @@
 	padding: 5%;
 	width: 100%;
 	background-color: rgba(245, 245, 245, 1);
-	
-}
-.unfold1 {
-	height: 12%;	
+	transition: all 0.8s;
 }
 .fold1 {
+	height: 12%;	
+}
+.unfold1 {
 	height: 60%;
 }
 #search1 {
 	top: 10%;
+	z-index: 100;
 }
 #safety1 {
 	top: 68%;
+	z-index: 101;
 }
 #poi1 {
 	top: 78%;
+	z-index: 102;
 }
 #cost1 {
 	top: 88%;
+	z-index: 103;
 }
 #info {
-  position: fixed;
-  top: 30px;
-  left: 30px;
-  z-index: 99999;
-  width: 100vw;
-  height: 100px;
+	min-width: 250px;
 }
-.popover-body {
-  min-width: 276px;
+#control {
+	position: fixed;
+	top: 80%;
+	left: 90%;
+	width: 9%;
+	height: 18%;
+	font-size: 1rem;
+	z-index: 100;
+	padding: 1%;
+}
+.onOff {
+	display: block;
+}
+#safetyListBtn {
+	position: absolute;
+	top: 80%;
+	left: 65%;
+	width: 27%;
+	height: 10%;
+	font-size: 1rem;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);		
+}
+#safetyList {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;
+}
+#safetySearch {
+	width: 30%;
+	height: 7%;
+	border: 1px solid black;
+}
+.safetySelect {
+	width: 20%;
+	height: 10%;
+	display: inline;	
+}
+#safetySelect {
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+#safetyAdd {
+	position: relative;
+	left: 30%;
+}
+#scContainer {
+	display: none;
+}
+/* 사이드 메뉴 아이콘 이미지화 */
+input[name="safety"] {
+	display: none;
+}
+.safetyLabel {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 30px;
+    border-radius: 100%;    
+}
+#totalIcon {
+    background-image: url('/resources/images/safetyTotal.svg');
+    border: 0px solid rgba(245, 245, 245, 1);
+}
+#publicIcon {
+    background-image: url('/resources/images/public.svg');
+    margin-bottom: 20px;
+    border: 0px solid red;
+}
+#eduIcon {
+    background-image: url('/resources/images/edu.svg');
+    margin-bottom: 20px;
+    border: 0px solid orange;
+}
+#healthIcon {
+    background-image: url('/resources/images/health.svg');
+    margin-bottom: 20px;
+    border: 0px solid yellow;
+}
+#conviIcon {
+    background-image: url('/resources/images/convi.svg');
+    border: 0px solid green;
+}
+#safeIcon {
+    background-image: url('/resources/images/safe.svg');
+    border: 0px solid blue;
+}
+#natureIcon {
+    background-image: url('/resources/images/nature.svg');
+    border: 0px solid purple;
+}
+.iconText {
+	position: relative;
+	top: 100px;
+	left: 30px;
+}
+#cContainer {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;	
+}
+#cSide {
+	position: absolute; 
+	top: 13%;
+	left: 1%;
+	z-index: 99999;
+	width: 0%;
+	height: 85%;
+	transition: all 0.8s;
+	visibility: hidden;	
+	padding: 1%;
+}
+#condition {
+	position: relative;
+	width: 100%;
+	height: 35%;
+	border: 5px dotted gray;
+	padding-top: 10%;
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: column;
+    transition: all 0.5s;
+    margin-bottom: 10%;
+}
+#condition:hover {
+  box-shadow: 0px 30px 18px -8px rgba(0, 0, 0,0.1);
+  transform: scale(1.05, 1.05);
+  transition: all 0.5s;
+}
+#cGrid {
+	width: 100%;
+	height: 96%;
+	display: flex;
+	justify-content: center;
+}
+#cCourse {
+	width: 20%;
+	height: 0%;
+	visibility: hidden;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;	
+    padding: 2.5%;
+}
+#cDetail {
+	width: 80%;
+	height: 0%;
+	visibility: hidden;
+	padding: 2.5%
+}
+.cCourses {
+	font-size: 1.5rem;
+	font-weight: 700;
+	display: block;
+}
+.cCourses [type=radio] {
+	display: none;
+}
+.details {
+	display: none;
+}
+#condNm {
+	height: 65px;
+	margin-bottom: 5%;
+	width: 70%;
+}
+#areaRange {
+	margin-left: 15%;
+	width: 70%;
+}
+#areaDiv {
+	padding-right: 15%;
+	padding-left: 15%;
+	margin-bottom: 3%;
+	display: flex;
+	justify-content: space-between;
+}
+.bold {
+	font-weight: 700;
+}
+#select4 {
+	display: inline;
+}
+.cSelectForm {
+	width: 30%;
+	display: inline;
+}
+.cJuso {
+	margin: 5%;
+}
+#condBtn {
+	position: fixed;
+	left: 88%;
+	top: 88%;
+	display: none;
+	z-index: 99999;
+}
+#cdContainer {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;	
+}
+.showList {
+	position: absolute;
+	top: 49%;
+	left: 80%;
+}
+#cListTable{
+	transition: all 0.5s;
+}
+#cDetailTable{
+	visibility: hidden;
+	transition: all 0.5s;
+	left: 100%;
+}
+/* srf-005 */
+#aSide {
+	position: absolute; 
+	top: 13%;
+	left: 1%;
+	z-index: 99999;
+	width: 0%;
+	height: 85%;
+	transition: all 0.8s;
+	visibility: hidden;	
+	padding: 1%;
+}
+#aCond {
+	position: relative;
+	width: 100%;
+	height: 35%;
+	border: 5px dotted gray;
+	padding-top: 10%;
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: column;
+    transition: all 0.5s;
+    margin-bottom: 10%;
+}
+#aCond:hover {
+  box-shadow: 0px 30px 18px -8px rgba(0, 0, 0,0.1);
+  transform: scale(1.05, 1.05);
+  transition: all 0.5s;
+}
+.showDetail {
+	position: absolute;
+	top: 49%;
+	left: 80%;
 }

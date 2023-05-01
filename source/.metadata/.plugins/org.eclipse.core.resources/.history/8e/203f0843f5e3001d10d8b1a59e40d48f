@@ -1,0 +1,20 @@
+package kr.or.forcewave.safety.vo;
+
+import lombok.Data;
+
+@Data
+public class SafetyVO {
+	
+	String gid;
+	String safetyNo;
+	String safetyCod;
+	String safetyNm;
+	String safetyAdd;
+	String safetyEmd;
+	double safetyLon;
+	double safetyLat;
+	double safetyX;
+	double safetyY;
+	String safetyGub;
+	String safetySor;
+}

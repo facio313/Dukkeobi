@@ -1,0 +1,29 @@
+package kr.or.forcewave.condition.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.forcewave.condition.vo.CondVO;
+
+@Controller
+@RequestMapping("cond")
+public class CondController {
+
+	@ModelAttribute
+	public CondVO cond() {
+		return new CondVO();
+	}
+	
+	@ResponseBody
+	@GetMapping
+	public CondVO getCond() {
+		return new CondVO();
+	}
+	
+	@ResponseBody
+	@PostMapping
+}

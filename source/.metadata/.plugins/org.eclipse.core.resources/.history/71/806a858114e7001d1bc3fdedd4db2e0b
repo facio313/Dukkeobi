@@ -1,0 +1,10 @@
+driverClassName=org.postgresql.Driver
+#url=jdbc:postgresql://localhost:5432/postgres
+url=jdbc:log4jdbc:postgresql:thin:@112.220.114.130:1521:xe
+user=postgres
+password=java
+
+initialSize=2
+maxIdle=2
+maxTotal=3
+maxWait=2000

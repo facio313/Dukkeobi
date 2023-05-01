@@ -1,0 +1,21 @@
+package kr.or.forcewave.condition.vo;
+
+import java.util.List;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@ToString
+public class CondVO {
+	String condSn;
+	String condNm;
+	String condRange;
+	String condDate;
+	String condArea;
+	String condDeleteDate;
+	
+	List<CondDetailVO> detailList;
+}

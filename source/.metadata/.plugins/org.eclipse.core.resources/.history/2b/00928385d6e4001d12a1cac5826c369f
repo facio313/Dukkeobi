@@ -1,0 +1,27 @@
+package kr.or.forcewave.safety.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@ToString
+public class SafetyVO {
+	
+	private String gid;
+	@NotBlank
+	private String safetyGubun;
+	private String safetySort;
+	private String safetyCode;
+	private String safetyNm;
+	private String safetyAddr;
+	private String safetyEmd;
+	private double safetyLon;
+	private double safetyLat;
+	private double safetyX;
+	private double safetyY;
+	
+}

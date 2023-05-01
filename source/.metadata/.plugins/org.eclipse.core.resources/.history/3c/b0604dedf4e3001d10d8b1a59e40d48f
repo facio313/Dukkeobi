@@ -1,0 +1,9 @@
+package kr.or.forcewave.safety.vo;
+
+import lombok.Data;
+
+@Data
+public class SafetyVO {
+	
+	
+}

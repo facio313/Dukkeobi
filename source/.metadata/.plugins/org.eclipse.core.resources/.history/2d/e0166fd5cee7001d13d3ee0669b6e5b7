@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.forcewave.condition.dao.CondDAO">
+
+	<select id="selectCondList" resultType="kr.or.forcewave.condition.vo.CondVO">
+		SELECT *
+		FROM COND
+		ORDER BY 1 ASC
+	</select>
+	
+	<select id="selectCond" parameterType="String" resultType="kr.or.forcewave.condition.vo.CondVO">
+		SELECT *
+		FROM COND
+		WHERE COND_NO = #{condNo}::INTEGER
+	</select>
+
+	<insert id="insertCond">
+		<selectKey order="BEFORE" resultType="int" keyProperty="condNo">
+			SELECT	MAX(COND_NO) + 1
+			FROM COND		
+		</selectKey>
+		INSERT INTO COND(
+			COND_NO,
+			COND_NM,
+			COND_EMD,
+			COND_RANGE,
+			COND_DETAILS,
+			COND_DATE
+		) VALUES (
+			${condNo},
+			#{condNm},
+			#{condEmd},
+			#{condRange},
+			#{condDetails},
+			(SELECT NOW())
+		)
+	</insert>
+	
+	<update id="updateCond">
+	
+	</update>
+	
+	<delete id="deleteCond">
+	
+	</delete>
+
+</mapper>
