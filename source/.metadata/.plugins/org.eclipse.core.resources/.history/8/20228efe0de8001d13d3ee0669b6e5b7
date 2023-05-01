@@ -1,0 +1,5 @@
+package kr.or.forcewave.spatial.dao;
+
+public interface SpatialDAO {
+
+}

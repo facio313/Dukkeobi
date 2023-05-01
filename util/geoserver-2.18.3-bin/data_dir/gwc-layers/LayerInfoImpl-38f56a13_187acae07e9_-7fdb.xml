@@ -26,7 +26,7 @@
       <key>STYLES</key>
       <defaultValue></defaultValue>
       <availableStyles class="sorted-set"/>
-      <defaultStyle>polygon</defaultStyle>
+      <defaultStyle>Dukkeobi:search_emd</defaultStyle>
     </styleParameterFilter>
   </parameterFilters>
   <gutter>0</gutter>

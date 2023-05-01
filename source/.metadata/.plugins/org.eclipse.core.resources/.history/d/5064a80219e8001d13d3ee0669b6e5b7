@@ -1,0 +1,14 @@
+package kr.or.forcewave.spatial.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+
+import kr.or.forcewave.spatial.service.SpatialService;
+
+@Controller
+public class SpatialController {
+
+	@Inject
+	private SpatialService service;
+}

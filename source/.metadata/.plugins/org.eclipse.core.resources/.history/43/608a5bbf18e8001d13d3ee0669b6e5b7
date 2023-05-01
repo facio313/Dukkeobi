@@ -1,0 +1,6 @@
+package kr.or.forcewave.spatial.service;
+
+public interface SpatialService {
+	
+	public List<SafetyVO> retrieveSafetyList(String clicked);
+}

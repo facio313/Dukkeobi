@@ -49,6 +49,7 @@
 			<span id="resultSgg">시/군/구</span>
 			<span id="resultEmd">읍/면/동</span>
 		</div>
+		<button id="removeBtn1" class="btn btn-danger searchBtn">지우기</button>
 		<button id="searchBtn1" class="btn btn-primary searchBtn">검색</button>
 	</div>
 	<div id="safety1" class="tile sideMenu fold1">
@@ -87,11 +88,67 @@
 	</div>
 	<div id="poi1" class="tile sideMenu fold1">
 		<div class="sideHeader">안전현황</div>
-
+		<div id="poiContainer">
+			<label id="poiTotalIcon" class="poiLabel" for="poiTotal">
+				<input name="poi" type="checkBox" id="poiTotal">
+				<span class="iconText">전체</span>
+			</label>
+			<label id="trafficIcon" class="poiLabel">
+				<input name="poi" type="checkBox" id="traffic">
+				<span class="iconText">교통</span>
+			</label>
+			<label id="disasterIcon" class="poiLabel">
+				<input name="poi" type="checkBox" id="disaster">
+				<span class="iconText">재난</span>
+			</label>
+			<label id="policeIcon" class="poiLabel">
+				<input name="poi" type="checkBox" id="police">
+				<span class="iconText">치안</span>
+			</label>
+			<label id="unhealthIcon" class="poiLabel">
+				<input name="poi" type="checkBox" id="unhealth">
+				<span class="iconText">보건</span>
+			</label>
+			<label id="accidentIcon" class="poiLabel">
+				<input name="poi" type="checkBox" id="accident">
+				<span class="iconText">사고</span>
+			</label>
+		</div>
+		<button id="poiListBtn" class="btn btn-primary">목록보기</button>
 	</div>
 	<div id="cost1" class="tile sideMenu fold1">
 		<div class="sideHeader">실거래가</div>
-	
+		<div id="reContainer">
+			<label id="reTotalIcon" class="reLabel" for="reTotal">
+				<input name="re" type="checkBox" id="reTotal">
+				<span class="iconText">전체</span>
+			</label>
+			<label id="ajIcon" class="reLabel">
+				<input name="re" type="checkBox" id="aj">
+				<span class="iconText">아파트(전)</span>
+			</label>
+			<label id="awIcon" class="reLabel">
+				<input name="re" type="checkBox" id="aw">
+				<span class="iconText">아파트(월)</span>
+			</label><br>
+			<label id="ojIcon" class="reLabel">
+				<input name="re" type="checkBox" id="oj">
+				<span class="iconText">오피스텔(전)</span>
+			</label>
+			<label id="owIcon" class="reLabel">
+				<input name="re" type="checkBox" id="ow">
+				<span class="iconText">오피스텔(월)</span>
+			</label><br>
+			<label id="yjIcon" class="reLabel">
+				<input name="re" type="checkBox" id="yj">
+				<span class="iconText">연립(전)</span>
+			</label>
+			<label id="ywIcon" class="reLabel">
+				<input name="re" type="checkBox" id="yw">
+				<span class="iconText">연립(월)</span>
+			</label>
+		</div>
+		<button id="reListBtn" class="btn btn-primary">목록보기</button>
 	</div>
 </div>
 

@@ -145,7 +145,7 @@ body {
 .searchBtn {
 	position: relative;
 	top: 22%;
-	left: 73%;
+	left: 45%;
 	width: 27%;
 	height: 10%;
 	font-size: 1rem;
@@ -183,7 +183,7 @@ body {
 	z-index: 103;
 }
 #info {
-	min-width: 250px;
+	width: 250px;
 }
 #control {
 	position: fixed;
@@ -197,6 +197,15 @@ body {
 }
 .onOff {
 	display: block;
+}
+#scContainer {
+	display: none;
+}
+#poiContainer {
+	display: none;
+}
+#reContainer {
+	display: none;
 }
 #safetyListBtn {
 	position: absolute;
@@ -236,14 +245,138 @@ body {
 	position: relative;
 	left: 30%;
 }
-#scContainer {
-	display: none;
+#poiListBtn {
+	position: absolute;
+	top: 80%;
+	left: 65%;
+	width: 27%;
+	height: 10%;
+	font-size: 1rem;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);		
 }
+#poiList {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;
+}
+#poiSearch {
+	width: 30%;
+	height: 7%;
+	border: 1px solid black;
+}
+.poiSelect {
+	width: 20%;
+	height: 10%;
+	display: inline;	
+}
+#poiSelect {
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+#poiAdd {
+	position: relative;
+	left: 30%;
+}
+#reListBtn {
+	position: absolute;
+	top: 80%;
+	left: 65%;
+	width: 27%;
+	height: 10%;
+	font-size: 1rem;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);		
+}
+#reList {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;
+}
+#reSearch {
+	width: 30%;
+	height: 7%;
+	border: 1px solid black;
+}
+.reSelect {
+	width: 20%;
+	height: 10%;
+	display: inline;	
+}
+#reSelect {
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+#reAdd {
+	position: relative;
+	left: 30%;
+}
+#poiListBtn {
+	position: absolute;
+	top: 80%;
+	left: 65%;
+	width: 27%;
+	height: 10%;
+	font-size: 1rem;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);		
+}
+#poiList {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 0%;
+	transition: all 0.5s;
+	visibility: hidden;
+}
+#poiSearch {
+	width: 30%;
+	height: 7%;
+	border: 1px solid black;
+}
+.poiSelect {
+	width: 20%;
+	height: 10%;
+	display: inline;	
+}
+#poiSelect {
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+#poiAdd {
+	position: relative;
+	left: 30%;
+}
+
 /* 사이드 메뉴 아이콘 이미지화 */
 input[name="safety"] {
 	display: none;
 }
 .safetyLabel {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 30px;
+    border-radius: 100%;    
+}
+.poiLabel {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 30px;
+    border-radius: 100%;    
+}
+.reLabel {
     width: 100px;
     height: 100px;
     margin-bottom: 30px;
@@ -284,6 +417,70 @@ input[name="safety"] {
 	position: relative;
 	top: 100px;
 	left: 30px;
+}
+input[name="poi"] {
+	display: none;
+}
+#poiTotalIcon {
+    background-image: url('/resources/images/safetyTotal.svg');
+    border: 0px solid rgba(245, 245, 245, 1);
+}
+#trafficIcon {
+    background-image: url('/resources/images/traffic.svg');
+    margin-bottom: 20px;
+    border: 0px solid red;
+}
+#disasterIcon {
+    background-image: url('/resources/images/disaster.svg');
+    margin-bottom: 20px;
+    border: 0px solid orange;
+}
+#policeIcon {
+    background-image: url('/resources/images/police.svg');
+    margin-bottom: 20px;
+    border: 0px solid yellow;
+}
+#unhealthIcon {
+    background-image: url('/resources/images/unhealth.svg');
+    border: 0px solid green;
+}
+#accidentIcon {
+    background-image: url('/resources/images/accident.svg');
+    border: 0px solid blue;
+}
+input[name="re"] {
+	display: none;
+}
+#reTotalIcon {
+    background-image: url('/resources/images/safetyTotal.svg');
+    border: 0px solid rgba(245, 245, 245, 1);
+}
+#ajIcon {
+    background-image: url('/resources/images/aj.svg');
+    margin-bottom: 20px;
+    border: 0px solid red;
+}
+#awIcon {
+    background-image: url('/resources/images/aw.svg');
+    margin-bottom: 20px;
+    border: 0px solid orange;
+}
+#ojIcon {
+    background-image: url('/resources/images/oj.svg');
+    margin-bottom: 20px;
+    border: 0px solid yellow;
+}
+#owIcon {
+    background-image: url('/resources/images/ow.svg');
+    border: 0px solid green;
+}
+#yjIcon {
+    background-image: url('/resources/images/yj.svg');
+    border: 0px solid blue;
+}
+#ywIcon {
+    background-image: url('/resources/images/yw.svg');
+    border: 0px solid purple;
 }
 #cContainer {
 	position: absolute; 

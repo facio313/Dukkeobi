@@ -1,0 +1,5 @@
+package kr.or.forcewave.spatial.service;
+
+public class SpatialServiceImpl implements SpatialService {
+
+}

@@ -151,6 +151,16 @@ let resultEmd = $("#resultEmd");
 
 let emdLayer = null;
 
+// 주거 현황 버튼
+inquire.on("click", function() {
+	let sidee = $("#side")
+	if (sidee.css("display") == "none") {
+		sidee.css("z-index", "99999").show();
+	} else {
+		sidee.css("z-index", "99995").hide();
+	}
+});
+
 // option 태그 만들기
 const sidoList = ["시/도", "강원도", "경기도", "경상남도", "경상북도", "광주광역시", "대구광역시", "대전광역시", "부산광역시", "서울특별시", "세종특별자치시", "울산광역시", "인천광역시", "전라남도", "전라북도", "제주특별자치도", "충청남도", "충청북도"];
 const sggList = ["시/군/구", "강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"];
@@ -184,9 +194,16 @@ searchBtn1.on("click", function(event) {
 	searchEmd(url, adm_nm);
 	// 이동하기
 	move(adm_nm);
-	// 클릭 시 해당 읍면동 정보
-	addInfo();
 	
+});
+
+// 검색한 읍면동 지우기
+$("#removeBtn1").on("click", function() {
+	removeLayer("adm_nm");
+	let popover = bootstrap.Popover.getInstance($("#info"));
+    if (popover) {
+        popover.dispose();
+    }	
 });
 
 
@@ -209,50 +226,146 @@ function searchEmd(url, adm_nm) {
 		source : amdSource
 	});
 	map.addLayer(layer);
-	
-	
 }
 
-// 클릭 해당 읍면동 정보 - 스크롤 시 따라 움직이는 문제
+// x, y좌표로 주소 가져오기
+let juso
+function getAddr(x, y) {
+	$.ajax({
+		url : `${pToA}${x},${y}`,
+		dataType : "jsonp",
+		success : function(resp) {
+			juso = resp.response.result[0].text;
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+// 클릭한 곳 주변 뭐 있나?
+let hereInfo;
+function whatshere(clicked) {
+	let publics = [];
+	let edus = [];
+	let healths = [];
+	let convis = [];
+	let safes = [];
+	let natures = [];
+	$.ajax({
+		url : `${context}/spatial/safetyList?clicked=${clicked}`,
+		success: function(list) {
+			$.each(list, function(index, safety) {
+				if (safety.safetySort == "public") {
+					publics.push(safety.safetyNm);
+				} else if (safety.safetySort == "edu") {
+					edus.push(safety.safetyNm);
+				} else if (safety.safetySort == "health") {
+					healths.push(safety.safetyNm);
+				} else if (safety.safetySort == "convi") {
+					convis.push(safety.safetyNm);
+				} else if (safety.safetySort == "safe") {
+					safes.push(safety.safetyNm);
+				} else if (safety.safetySort == "nature") {
+					natures.push(safety.safetyNm);
+				}
+			});
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	}).then(() => {
+		hereInfo = {
+			publics : publics,
+			edus : edus,
+			healths : healths,
+			convis : convis,
+			safes : safes,
+			natures : natures
+		};
+	});
+}
+// 클릭 해당 위치 정보
+let emdSource = new ol.source.TileWMS({
+	url : url,
+	params : {
+		layers : "Dukkeobi:doro_polygon",
+		styles : "",
+//		cql_filter : ``
+	}
+});
 const info = new ol.Overlay({
 	element : document.querySelector("#info")
 });
 map.addOverlay(info);
-function addInfo() {
-	map.on('singleclick', function(event) {
-		let coordinate = event.coordinate;
-		let element = info.getElement();
-		info.setPosition(coordinate);
-		
-	    let viewResolution = /** @type {number} */ (map.getView().getResolution());
-	    let urll = amdSource.getGetFeatureInfoUrl(
-	      	coordinate, viewResolution, 'EPSG:3857',
-	      	{
-			  'INFO_FORMAT': 'application/json',
-			  'QUERY_LAYERS' : 'Dukkeobi:mapogu_emd'
-				  });
-		if (urll) {
-			fetch(urll)
-		    	.then((response) => response.json())
-		    	.then((json) => {
-					let content = json.features[0].properties.adm_nm;
-					let popover = bootstrap.Popover.getInstance(element);
-		            if (popover) {
-		                popover.dispose();
-		            }
-		            popover = new bootstrap.Popover(element, {
-		                  animation: false,
-		                  container: element,
-		                  content: `서울시 마포구 ${content}`,
-		                  html: true,
-		                  placement: 'top',
-		                  title: '클릭한 위치',
-		            });
-		            popover.show();
-		   		});
-		}
-	});
-}
+let pToA = "https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:3857&format=json&type=both&zipcode=true&simple=false&key=783D66F2-A36F-3995-B0D6-35F1429C1BFE&point=";
+map.on('singleclick', function(event) {
+	let coordinate = event.coordinate;
+	let element = info.getElement();
+	info.setPosition(coordinate);
+	
+    let viewResolution = /** @type {number} */ (map.getView().getResolution());
+    let urll = emdSource.getGetFeatureInfoUrl(
+      	coordinate, viewResolution, 'EPSG:3857',
+      	{
+		  'INFO_FORMAT': 'application/json',
+		  'QUERY_LAYERS' :  'Dukkeobi:doro_polygon'
+			  });
+	if (urll) {
+		fetch(urll)
+	    	.then((response) => response.json())
+	    	.then((json) => {
+				let properties = json.features[0].properties;
+				whatshere(properties.bd_mgt_sn);
+				console.log(hereInfo);
+				
+				let x = properties.x;
+				let y = properties.y;
+				getAddr(x, y);
+				
+				let geonmul = properties.buld_nm;
+				let geonmulD = properties.buld_nm_dc;
+				
+				if (typeof juso == "undefined") {
+					juso = "다른 곳을 선택해주세요.";
+				}
+				if (geonmul == null) {
+					geonmul = "";
+				}
+				if (geonmulD == null || geonmulD == geonmul) {
+					geonmulD = "";
+				}
+				
+				let popover = bootstrap.Popover.getInstance(element);
+	            if (popover) {
+	                popover.dispose();
+	            }
+	            popover = new bootstrap.Popover(element, {
+	                  animation: false,
+	                  container: element,
+	                  content: `
+	                  			${juso} ${geonmul} ${geonmulD}
+	                  			<hr>
+	                  			<div>안전시설${hereInfo.publics.length > 0 ? "(" + hereInfo.publics.length + ") : " + hereInfo.publics[0] + "..." : "(0)"}</div>
+	                  			<div>안전시설${hereInfo.edus.length > 0 ? "(" + hereInfo.edus.length + ") : " + hereInfo.edus[0] + "..." : "(0)"}</div>
+	                  			<div>안전시설${hereInfo.healths.length > 0 ? "(" + hereInfo.healths.length + ") : " + hereInfo.healths[0] + "..." : "(0)"}</div>
+	                  			<div>안전시설${hereInfo.convis.length > 0 ? "(" + hereInfo.convis.length + ") : " + hereInfo.convis[0] + "..." : "(0)"}</div>
+	                  			<div>안전시설${hereInfo.safes.length > 0 ? "(" + hereInfo.safes.length + ") : " + hereInfo.safes[0] + "..." : "(0)"}</div>
+	                  			<div>자연시설${hereInfo.natures.length > 0 ? "(" + hereInfo.natures.length + ") : " + hereInfo.natures[0] + "..." : "(0)"}</div>
+	                  			`,
+	                  html: true,
+	                  placement: 'top',
+	                  title: '클릭한 위치',
+	            });
+	            popover.show();
+	            let left = parseFloat($("#info").parent().css("left").replace("px", "")) - 125;
+	            $("#info").parent().css("left", left + "px");
+	   		});
+	}
+});
 
 // 이동하기
 function move(adm_nm) {
@@ -273,7 +386,9 @@ let scContainer = $("#scContainer");
 let safetyTbody = $("#safetyTbody");
 
 // 뭘 클릭했는지 저장하기
-let clickList = [];
+let sclickList = [];
+let pclickList = [];
+let rclickList = [];
 
 // 안전현황 레이어 추가/제거
 $("input[name=safety]").on("click", function() {
@@ -285,13 +400,13 @@ $("input[name=safety]").on("click", function() {
 			safety.parent().css({"background-color":safety.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}2.svg)`});
 			
 			// 체크되어 있는 것만 넣고
-			clickList.push(id);
+			sclickList.push(id);
 		} else {
 			removeLayer(id);
 			safety.parent().css({"background-color":"", "background-image":`url(${context}/resources/images/${id}.svg)`});
 			
 			// 해제되면 삭제
-			clickList = clickList.filter((checked) => checked !== id);
+			sclickList = sclickList.filter((checked) => checked !== id);
 		}
 	} else if (safety.prop("type") == "radio") {
 		safety.parent().css({"background-color":safety.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}2.svg)`});
@@ -325,6 +440,118 @@ function addSafety(url, sor) {
 		   		params: {
 					layers: "Dukkeobi:safety",
 					styles: "safety_" + sor,
+		         },
+		 	}),
+		});
+	}
+	map.addLayer(layer);
+}
+// 주요시설 레이어 추가/제거
+$("input[name=poi]").on("click", function() {
+	let poi = $(this);
+	let id = poi.attr("id");
+	if (poi.prop("type") == "checkbox") {
+		if (poi.is(":checked")) {
+			addPoi(url, id);
+			poi.parent().css({"background-color":poi.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}2.svg)`});
+			
+			// 체크되어 있는 것만 넣고
+			pclickList.push(id);
+		} else {
+			removeLayer(id);
+			poi.parent().css({"background-color":"", "background-image":`url(${context}/resources/images/${id}.svg)`});
+			
+			// 해제되면 삭제
+			pclickList = pclickList.filter((checked) => checked !== id);
+		}
+	} else if (poi.prop("type") == "radio") {
+		poi.parent().css({"background-color":poi.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}2.svg)`});
+		let pois = $("[name=poi]").not(":checked");
+		$.each(pois, function(index, poi) {
+			$(poi).parent().css({"background-color":"", "background-image":`url(${context}/resources/images/${poi.id}.svg)`});
+		});
+	}
+});
+
+// 주요시설현황 레이어 추가
+function addPoi(url, sor) {
+	let layer;
+	if (sor != "poiTotal") {
+		layer = new ol.layer.Tile({
+			name : sor,
+		 	source: new ol.source.TileWMS({
+		   		url: url,
+		   		params: {
+					layers: "Dukkeobi:poi",
+					styles: "poi_" + sor,
+					cql_filter: `safety_sort = '${sor}'`
+		         },
+		 	}),
+		});
+	} else {
+		layer = new ol.layer.Tile({
+			name : sor,
+		 	source: new ol.source.TileWMS({
+		   		url: url,
+		   		params: {
+					layers: "Dukkeobi:poi",
+					styles: "poi_" + sor,
+		         },
+		 	}),
+		});
+	}
+	map.addLayer(layer);
+}
+// 실거래가 레이어 추가/제거
+$("input[name=re]").on("click", function() {
+	let re = $(this);
+	let id = re.attr("id");
+	if (re.prop("type") == "checkbox") {
+		if (re.is(":checked")) {
+			addRe(url, id);
+			re.parent().css({"background-color":re.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}.svg)`});
+			
+			// 체크되어 있는 것만 넣고
+			rclickList.push(id);
+		} else {
+			removeLayer(id);
+			re.parent().css({"background-color":"", "background-image":`url(${context}/resources/images/${id}.svg)`});
+			
+			// 해제되면 삭제
+			rclickList = rclickList.filter((checked) => checked !== id);
+		}
+	} else if (re.prop("type") == "radio") {
+		re.parent().css({"background-color":re.parent().css("border-color"), "background-image":`url(${context}/resources/images/${id}.svg)`});
+		let res = $("[name=re]").not(":checked");
+		$.each(res, function(index, re) {
+			$(re).parent().css({"background-color":"", "background-image":`url(${context}/resources/images/${re.id}.svg)`});
+		});
+	}
+});
+
+// 실거래가현황 레이어 추가
+function addRe(url, sor) {
+	let layer;
+	if (sor != "reTotal") {
+		layer = new ol.layer.Tile({
+			name : sor,
+		 	source: new ol.source.TileWMS({
+		   		url: url,
+		   		params: {
+					layers: "Dukkeobi:real_estate",
+					styles: "re_" + sor,
+					cql_filter: `gubun = '${sor}'`
+		         },
+		 	}),
+		});
+	} else {
+		layer = new ol.layer.Tile({
+			name : sor,
+		 	source: new ol.source.TileWMS({
+		   		url: url,
+		   		params: {
+					layers: "Dukkeobi:real_estate",
+					styles: "re_" + sor,
 		         },
 		 	}),
 		});
@@ -473,10 +700,10 @@ function safetyRemove(button) {
 $("#observe").on("click", function() {
 	if($("#cSide").css("visibility") == "hidden") {
 		$("#cSide").css({"visibility":"visible", "width":"23%", "z-index":"99999"}).show();
-		$("#side").hide();
+//		$("#side").hide();
 	} else {
 		$("#cSide").css({"visibility":"hidden", width:"0%", "z-index":"0"}).hide();
-		$("#side").show();
+//		$("#side").show();
 	}
 });
 
@@ -723,10 +950,10 @@ function addCDetail(condNo) {
 
 $("#analyze").on("click", function() {
 	if ($("#aSide").css("visibility") == "hidden") {
-		$("#side").hide();
+//		$("#side").hide();
 		$("#aSide").css({"visibility":"visible", "width":"23%", "z-index":"99999"}).show();
 	} else {
 		$("#aSide").css({"visibility":"hidden", "width":"0%", "z-index":"1"}).hide();
-		$("#side").show();
+//		$("#side").show();
 	}
 });

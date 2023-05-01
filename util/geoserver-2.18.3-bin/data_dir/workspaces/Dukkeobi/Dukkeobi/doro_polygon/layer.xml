@@ -1,0 +1,16 @@
+<layer>
+  <name>doro_polygon</name>
+  <id>LayerInfoImpl-34ffe933:187d592536b:-7ffe</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-34ffe933:187d592536b:-7fff</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2023-05-01 06:05:34.881 UTC</dateCreated>
+</layer>

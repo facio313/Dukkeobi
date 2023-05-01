@@ -60,3 +60,11 @@ pm_winnt:notice] [pid 9008:tid 328] AH00455: Apache/2.4.57 (Win64) mod_jk/1.2.48
 [Sun Apr 23 14:54:41.400888 2023] [core:notice] [pid 5496:tid 356] AH00094: Command line: 'C:\\Users\\facci\\Desktop\\Dukkeobi\\util\\Apache24\\bin\\httpd.exe -d C:/Users/facci/Desktop/Dukkeobi/util/Apache24'
 [Sun Apr 23 14:54:41.410404 2023] [mpm_winnt:notice] [pid 5496:tid 356] AH00418: Parent: Created child process 7628
 [Sun Apr 23 14:54:41.725359 2023] [mpm_winnt:notice] [pid 7628:tid 376] AH00354: Child: Starting 64 worker threads.
+[Mon May 01 21:30:48.777838 2023] [mpm_winnt:notice] [pid 5496:tid 356] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Mon May 01 21:30:50.797108 2023] [mpm_winnt:notice] [pid 7628:tid 376] AH00364: Child: All worker threads have exited.
+[Mon May 01 21:30:50.822892 2023] [mpm_winnt:notice] [pid 5496:tid 356] AH00430: Parent: Child process 7628 exited successfully.
+[Mon May 01 21:31:05.974024 2023] [mpm_winnt:notice] [pid 20496:tid 360] AH00455: Apache/2.4.57 (Win64) mod_jk/1.2.48 configured -- resuming normal operations
+[Mon May 01 21:31:05.974024 2023] [mpm_winnt:notice] [pid 20496:tid 360] AH00456: Apache Lounge VS17 Server built: Apr  3 2023 11:28:13
+[Mon May 01 21:31:05.974024 2023] [core:notice] [pid 20496:tid 360] AH00094: Command line: 'C:\\Users\\facci\\Desktop\\Dukkeobi\\util\\Apache24\\bin\\httpd.exe -d C:/Users/facci/Desktop/Dukkeobi/util/Apache24'
+[Mon May 01 21:31:05.977037 2023] [mpm_winnt:notice] [pid 20496:tid 360] AH00418: Parent: Created child process 21876
+[Mon May 01 21:31:06.180439 2023] [mpm_winnt:notice] [pid 21876:tid 360] AH00354: Child: Starting 64 worker threads.
