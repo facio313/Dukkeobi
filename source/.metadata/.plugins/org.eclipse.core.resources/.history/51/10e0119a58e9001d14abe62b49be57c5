@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.forcewave.spatial.dao.SpatialDAO">
+
+	<select id="selectSafetyList" parameterType="String" resultType="kr.or.forcewave.safety.vo.SafetyVO">
+		SELECT S.*, COUNT(1) AS CNT
+		FROM SAFETY S
+		INNER JOIN DORO_POLYGON D ON ST_DWITHIN(ST_SETSRID(D.GEOM, 3857), ST_SETSRID(S.GEOM, 3857), 500)
+		WHERE D.BD_MGT_SN = #{clicked}
+		GROUP BY S.GID
+		ORDER BY CNT DESC
+	</select>
+	
+	<select id="selectRe" parameterType="kr.or.forcewave.condition.vo.CondVO" resultType="kr.or.forcewave.spatial.vo.ResultVO">
+	  <![CDATA[ 
+		SELECT R.GUBUN, M.ADM_NM, R.DANJI, R.AREA, R.DEPOSIT, R.COST, D.GEOM
+		FROM REAL_ESTATE R
+		INNER JOIN DORO_POLYGON D ON ST_CONTAINS(D.GEOM, R.GEOM)
+		INNER JOIN MAPOGU_EMD M ON ST_CONTAINS(M.GEOM, D.GEOM)
+		WHERE R.GUBUN IN (${condRe})
+		AND CAST(REPLACE(R.DEPOSIT, ',', '') AS INTEGER)<= #{condReRange1}
+		AND R.COST <= #{condReRange2}
+		AND M.ADM_NM = #{condEmd}
+	  ]]>
+	</select>
+
+	<select id="selectAnalysis" parameterType="kr.or.forcewave.condition.vo.CondVO" resultType="kr.or.forcewave.spatial.vo.ResultVO">
+	  <![CDATA[ 
+		SELECT A.BD_MGT_SN, A.DANJI, S.SAFETY_SORT, COUNT(1) CNT, #{condNo} COND_NO
+		FROM (
+			SELECT R.GUBUN, M.ADM_NM, R.DANJI, R.AREA, R.DEPOSIT, R.COST, D.BD_MGT_SN, D.GEOM
+			FROM REAL_ESTATE R
+			INNER JOIN DORO_POLYGON D ON ST_CONTAINS(D.GEOM, R.GEOM)
+			INNER JOIN MAPOGU_EMD M ON ST_CONTAINS(M.GEOM, D.GEOM)
+			WHERE R.GUBUN IN (${condRe})
+			AND CAST(REPLACE(R.DEPOSIT, ',', '') AS INTEGER)<= #{condReRange1}
+			AND R.COST <= #{condReRange2}
+			AND M.ADM_NM = #{condEmd}
+		) A
+		INNER JOIN SAFETY S ON ST_CONTAINS(ST_BUFFER(A.GEOM, #{condRange}), ST_SETSRID(S.GEOM, 3857))
+		GROUP BY 3, 2, 1
+		ORDER BY 1 DESC	
+	  ]]>
+	</select>
+	
+<!-- 	<insert id="insertResult" parameterType="List">
+		<selectKey order="BEFORE" resultType="int" keyProperty="resultNo">
+			SELECT MAX(RESULT_NO) + 1
+			FROM RESULT
+		</selectKey>
+		INSERT INTO RESULT (
+				RESULT_NO,
+				COND_NO,
+				SAFETY_SORT,
+				DANJI,
+				BD_MGT_SN,
+				CNT,
+				DATE,
+				RANK,
+				TOTAL_SCORE,
+				TOTAL_AVG,
+				PUBLIC_SCORE,
+				EDU_SCORE,
+				HEALTH_SCORE,
+				CONVI_SCORE,
+				SAFE_SCORE,
+				NATURE_SCORE
+			) VALUES
+		<foreach collection="list" item="item" index="idx" separator=",">
+			(
+				#{item.resultNo},
+				#{item.condNo},
+				#{item.safetySort},
+				#{item.danji},
+				#{item.bdMgtSn},
+				#{item.cnt},
+				(SELECT NOW()),
+				#{item.rank},
+				#{item.totalScore},
+				#{item.totalAvg},
+				#{item.publicScore},
+				#{item.eduScore},
+				#{item.healthScore},
+				#{item.conviScore},
+				#{item.safeScore},
+				#{item.natureScore}
+			)
+		</foreach>
+	</insert> -->
+	
+	<insert id="insertResult" parameterType="kr.or.forcewave.spatial.vo.ResultVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="resultNo">
+			SELECT MAX(RESULT_NO) + 1
+			FROM RESULT
+		</selectKey>
+			INSERT INTO RESULT (
+				RESULT_NO,
+				COND_NO,
+				SAFETY_SORT,
+				DANJI,
+				BD_MGT_SN,
+				CNT,
+				DATE,
+				RANK,
+				TOTAL_SCORE,
+				TOTAL_AVG,
+				PUBLIC_SCORE,
+				EDU_SCORE,
+				HEALTH_SCORE,
+				CONVI_SCORE,
+				SAFE_SCORE,
+				NATURE_SCORE
+			) VALUES (
+				#{resultNo},
+				#{condNo},
+				#{safetySort},
+				#{danji},
+				#{bdMgtSn},
+				#{cnt},
+				(SELECT NOW()),
+				#{rank},
+				#{totalScore},
+				#{totalAvg},
+				#{publicScore},
+				#{eduScore},
+				#{healthScore},
+				#{conviScore},
+				#{safeScore},
+				#{natureScore}
+			)
+	</insert>
+</mapper>

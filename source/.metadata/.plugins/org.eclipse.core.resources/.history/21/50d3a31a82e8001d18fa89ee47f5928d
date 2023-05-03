@@ -1,0 +1,40 @@
+package kr.or.forcewave.spatial.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.forcewave.condition.dao.CondDAO;
+import kr.or.forcewave.condition.vo.CondVO;
+import kr.or.forcewave.safety.vo.SafetyVO;
+import kr.or.forcewave.spatial.dao.SpatialDAO;
+import kr.or.forcewave.spatial.vo.ResultVO;
+
+@Service
+public class SpatialServiceImpl implements SpatialService {
+
+	@Inject
+	private SpatialDAO spatialDao;
+	
+	@Inject
+	private CondDAO condDao;
+	
+	@Override
+	public List<SafetyVO> retrieveSafetyList(String clicked) {
+		return spatialDao.selectSafetyList(clicked);
+	}
+
+	@Override
+	public ResultVO retrieveResult(int condNo) {
+		// 조건 가져오기(읍면동, 실거래가 필터)
+		CondVO cond = condDao.selectCond(condNo);
+		
+		// 읍면동, 실거래가 필터에 맞는 실거래가 매물만 뽑아냄(쿼리)
+		// 거기서 버퍼주고 카운팅하기
+		
+		return null;
+	}
+
+}

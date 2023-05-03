@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.forcewave.spatial.dao.SpatialDAO">
+
+	<select id="selectSafetyList" parameterType="String" resultType="kr.or.forcewave.safety.vo.SafetyVO">
+		SELECT S.*, COUNT(1) AS CNT
+		FROM SAFETY S
+		INNER JOIN DORO_POLYGON D ON ST_DWITHIN(ST_SETSRID(D.GEOM, 3857), ST_SETSRID(S.GEOM, 3857), 500)
+		WHERE D.BD_MGT_SN = #{clicked}
+		GROUP BY S.GID
+		ORDER BY CNT DESC
+	</select>
+	
+	<select id="selectRe" parameterType="kr.or.forcewave.condition.vo.CondVO" resultType="kr.or.forcewave.spatial.vo.ResultVO">
+<!-- 	  <![CDATA[  -->
+		SELECT R.GUBUN, R.SGG, R.DANJI, R.AREA, R.DEPOSIT, R.COST, D.GEOM
+		FROM REAL_ESTATE R
+		INNER JOIN DORO_POLYGON D ON ST_CONTAINS(D.GEOM, R.GEOM)
+		WHERE R.GUBUN IN (#{condRe})
+		AND CAST(REPLACE(R.DEPOSIT, ',', '') AS INTEGER) = #{condReRange1}
+		AND R.COST <= #{condReRange2}
+<!-- 	  ]]> -->
+	</select>
+
+</mapper>

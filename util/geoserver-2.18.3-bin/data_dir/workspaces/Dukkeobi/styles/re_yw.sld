@@ -23,7 +23,6 @@
             </Graphic>
           </PointSymbolizer>
         </Rule>
-
       </FeatureTypeStyle>
     </UserStyle>
   </NamedLayer>

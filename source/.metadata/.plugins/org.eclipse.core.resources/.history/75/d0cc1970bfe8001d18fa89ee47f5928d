@@ -1,0 +1,49 @@
+package kr.or.forcewave.spatial.vo;
+
+import java.util.List;
+
+import kr.or.forcewave.safety.vo.SafetyVO;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@ToString
+public class ResultVO {
+	private String safetySort;
+	private String danji;
+	private String bdMgtSn;
+	private int cnt;
+	
+	private int rank;
+	private int totalScore;
+	
+	// z점수
+	private int publicScore;
+	private int eduScore;
+	private int healthScore;
+	private int conviScore;
+	private int safeScore;
+	private int natureScore;
+	
+	private List<SafetyVO> safetyList;
+	
+	/*
+	public void setScore() {
+		if (this.safetySort.equals("public")) {
+			this.publicScore = this.cnt;
+		} else if (this.safetySort.equals("edu")) {
+			this.eduScore = this.cnt;
+		} else if (this.safetySort.equals("health")) {
+			this.healthScore = this.cnt;
+		} else if (this.safetySort.equals("convi")) {
+			this.conviScore = this.cnt;
+		} else if (this.safetySort.equals("safe")) {
+			this.safeScore = this.cnt;
+		} else if (this.safetySort.equals("nature")) {
+			this.natureScore = this.cnt;
+		}
+	}
+	*/
+}

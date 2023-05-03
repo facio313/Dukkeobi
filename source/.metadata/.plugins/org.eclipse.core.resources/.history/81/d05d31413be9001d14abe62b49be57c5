@@ -1,0 +1,284 @@
+package kr.or.forcewave;
+
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.IntSummaryStatistics;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import kr.or.forcewave.condition.dao.CondDAO;
+import kr.or.forcewave.condition.vo.CondVO;
+import kr.or.forcewave.index.dao.IndexDAO;
+import kr.or.forcewave.safety.dao.SafetyDAO;
+import kr.or.forcewave.safety.vo.SafetyVO;
+import kr.or.forcewave.spatial.dao.SpatialDAO;
+import kr.or.forcewave.spatial.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RunWith(SpringRunner.class)
+@ContextConfiguration("file:webapp/WEB-INF/spring/*-context.xml")
+@WebAppConfiguration
+public class AnalyzeTest {
+
+	@Inject
+	private SpatialDAO spatialDao;
+	@Inject
+	private CondDAO condDao;
+	
+	private int condNo;
+	
+	@Before
+	public void setup() {
+		condNo = 3;
+	}
+	
+	@Test
+	public void test() {
+		// 조건 가져오기(읍면동, 실거래가 필터)
+		CondVO cond = condDao.selectCond(condNo);
+		
+		log.info("읍면동 = {}", cond.getCondEmd());
+		log.info("범위 = {}", cond.getCondRange());
+		log.info("주거유형 = {}", cond.getCondRe());
+		log.info("보증금 = {}", cond.getCondReRange1());
+		log.info("월세 = {}", cond.getCondReRange2());
+		
+		String[] reList = cond.getCondRe().split(",");
+		String res = "";
+		/*
+		for (int i = 0; i < reList.length; i++) {
+			if (i == 0) {
+				res += "";
+			} else {
+				res += "'";
+			}
+			res += reList[i];
+			if (i < reList.length - 1) {
+				res += "',";
+			}
+		}
+		cond.setCondRe(res);
+		*/
+		for (int i = 0; i < reList.length; i++) {
+			res += "'" + reList[i] + "'";
+			if (i < reList.length - 1) {
+				res += ",";
+			}
+		}
+		cond.setCondRe(res);
+		
+		
+		// 읍면동, 실거래가 필터에 맞는 실거래가 매물만 뽑아냄(쿼리)
+		// 거기서 버퍼주고 카운팅하기
+		String details = cond.getCondDetails();
+		List<String> list = Arrays.asList(details.split(","));
+		// 교통
+		List<String> tds = list.stream()
+							.filter(d -> StringUtils.contains("지하철 버스 택시 자전거 도보", d))
+							.collect(Collectors.toList());
+		// 편의
+		List<String> cds = list.stream()
+							.filter(d -> StringUtils.contains("백화점 마트 편의점 외부화장실 영화관 운동시설 노래방 PC방", d))
+							.collect(Collectors.toList());
+		// 보건
+		List<String> mds = list.stream()
+							.filter(d -> StringUtils.contains("병원 약국 보건소 요양소", d))
+							.collect(Collectors.toList());
+		// 공공
+		List<String> ads = list.stream()
+							.filter(d -> StringUtils.contains("행정복지센터 구청 시청 공기업 정부기관", d))
+							.collect(Collectors.toList());
+		// 학군
+		List<String> sds = list.stream()
+							.filter(d -> StringUtils.contains("대학교 고등학교 중학교 초등학교 유치원 학원 평생교육원", d))
+							.collect(Collectors.toList());
+		// 자연
+		List<String> nds = list.stream()
+							.filter(d -> StringUtils.contains("가로수 공원 숲 산 하천", d))
+							.collect(Collectors.toList());
+		
+		Map<String, List<String>> map = new HashMap<>();
+		map.put("교통", tds);
+		map.put("편의", cds);
+		map.put("보건", mds);
+		map.put("공공", ads);
+		map.put("학군", sds);
+		map.put("자연", nds);
+		
+		// 조건에 해당하는 버퍼 영역에 safety 현황 갖고 오기
+		List<ResultVO> resultList = spatialDao.selectAnalysis(cond);
+		// resultList.stream().forEach(ResultVO::setScore);
+		
+		// 각 항목 점수 리스트
+		List<ResultVO> publicList = getSortedList(resultList, "public");
+		List<ResultVO> eduList = getSortedList(resultList, "edu");
+		List<ResultVO> healthList = getSortedList(resultList, "health");
+		List<ResultVO> conviList = getSortedList(resultList, "convi");
+		List<ResultVO> safeList = getSortedList(resultList, "safe");
+		List<ResultVO> natureList = getSortedList(resultList, "nature");
+		
+		// 평균
+		double publicAvg = getAvg(publicList);
+		double eduAvg = getAvg(eduList);
+		double healthAvg = getAvg(healthList);
+		double conviAvg = getAvg(conviList);
+		double safeAvg = getAvg(safeList);
+		double natureAvg = getAvg(natureList);
+		
+		// 표준편차
+		double publicSd = getSd(publicList);
+		double eduSd = getSd(eduList);
+		double healthSd = getSd(healthList);
+		double conviSd = getSd(conviList);
+		double safeSd = getSd(safeList);
+		double natureSd = getSd(natureList);
+		
+		// t점수 매기기
+		publicList.stream().forEach(r -> r.setPublicScore(getT(getZ(r.getCnt(), publicAvg, publicSd))));
+		eduList.stream().forEach(r -> r.setEduScore(getT(getZ(r.getCnt(), eduAvg, eduSd))));
+		healthList.stream().forEach(r -> r.setHealthScore(getT(getZ(r.getCnt(), healthAvg, healthSd))));
+		conviList.stream().forEach(r -> r.setConviScore(getT(getZ(r.getCnt(), conviAvg, conviSd))));
+		safeList.stream().forEach(r -> r.setSafeScore(getT(getZ(r.getCnt(), safeAvg, safeSd))));
+		natureList.stream().forEach(r -> r.setNatureScore(getT(getZ(r.getCnt(), natureAvg, natureSd))));
+		
+		// t점수 하나에 담기
+		String prid = "";
+		String erid = "";
+		String hrid = "";
+		String crid = "";
+		String srid = "";
+		String nrid = "";
+		
+		if (!conviList.isEmpty()) {
+			for (ResultVO cr : conviList) {
+				crid = cr.getBdMgtSn();
+				if (!publicList.isEmpty()) {
+					for (ResultVO pr : publicList) {
+						prid = pr.getBdMgtSn();
+						cr.setPublicScore(pr.getPublicScore());
+						cr.setCnt(cr.getCnt() + pr.getCnt());
+					}
+				}
+				if (!eduList.isEmpty()) {
+					for (ResultVO er : eduList) {
+						erid = er.getBdMgtSn();
+						cr.setEduScore(er.getEduScore());
+						cr.setCnt(cr.getCnt() + er.getCnt());
+					}
+				}
+				if (!healthList.isEmpty()) {
+					for (ResultVO hr : healthList) {
+						hrid = hr.getBdMgtSn();
+						cr.setHealthScore(hr.getHealthScore());
+						cr.setCnt(cr.getCnt() + hr.getCnt());
+					}
+				}
+				if (!safeList.isEmpty()) {
+					for (ResultVO sr : safeList) {
+						srid = sr.getBdMgtSn();
+						cr.setSafeScore(sr.getSafeScore());
+						cr.setCnt(cr.getCnt() + sr.getCnt());
+					}
+				}
+				if (!natureList.isEmpty()) {
+					for (ResultVO nr : natureList) {
+						nrid = nr.getBdMgtSn();
+						cr.setNatureScore(nr.getNatureScore());
+						cr.setCnt(cr.getCnt() + nr.getCnt());
+					}
+				}
+			}
+		}
+		
+		resultList.clear();
+		resultList = conviList;
+		resultList.stream().forEach(r -> r.setTotalScore());
+		resultList.stream().forEach(System.out::println);
+		Collections.sort(resultList, new Comparator<ResultVO>() {
+			@Override
+			public int compare(ResultVO o1, ResultVO o2) {
+				if (o1.getTotalScore() > o2.getTotalScore()) {
+					return -1;
+				} else if (o1.getTotalScore() == o2.getTotalScore()) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+		});
+//		Collections.sort(resultList, new Comparator<ResultVO>() {
+//
+//			@Override
+//			public int compare(ResultVO o1, ResultVO o2) {
+//				return (o2.getTotalScore() <= o1.getTotalScore()) ? -1 : 1;
+//			}
+//			
+//			for (int i = 0; i < resultList.size(); i++) {
+//				if (resultList.get(i).getTotalScore() == o1.) {
+//					
+//				}-
+//			}
+//			
+//		});
+		
+	}
+	
+	/////////////////////////////////////////////////////////
+	
+	public static List<ResultVO> getSortedList(List<ResultVO> resultList, String sort) {
+		return resultList.stream().filter(r -> StringUtils.equals(r.getSafetySort(), sort)).collect(Collectors.toList());
+	}
+	
+	public static double getAvg(List<ResultVO> safetyList) {
+		return safetyList.stream().collect(Collectors.averagingInt(ResultVO::getCnt));
+	}
+	
+	public static double getSd(List<ResultVO> safetyList) {
+		List<Double> list = safetyList.stream().map(r -> r.getCnt()*1.0).collect(Collectors.toList());
+		Double[] array = list.toArray(new Double[list.size()]);
+	    if (array.length < 2) return Double.NaN;
+
+	    double sum = 0.0;
+	    double sd = 0.0;
+	    double diff;
+	    double meanValue = getAvg(safetyList);
+
+	    for (int i = 0; i < array.length; i++) {
+	      diff = array[i] - meanValue;
+	      sum += diff * diff;
+	    }
+	    sd = Math.sqrt(sum / (array.length - 1));
+
+	    return sd;
+	}
+	
+	public static double getZ(double x, double m, double o) {
+		return (x - m)/o;
+	}
+	
+	public static double getT(double z) {
+		return 10 * z + 50;
+	}
+	
+}

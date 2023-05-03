@@ -30,9 +30,9 @@
 							<form:option value="public">공공</form:option>
 							<form:option value="edu">교육</form:option>
 							<form:option value="health">보건</form:option>
-							<form:option value="accident">사고</form:option>
+							<form:option value="convi">편의</form:option>
 							<form:option value="safe">안전</form:option>
-							<form:option value="police">치안</form:option>
+							<form:option value="nature">자연</form:option>
 						</form:select>
 					</td>
 				</tr>
@@ -49,7 +49,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>원인</th>
+					<th>제목</th>
 					<td>
 						<form:input path="safetyNm" cssClass="form-control" type="text"/>
 					</td>

@@ -1,0 +1,30 @@
+package kr.or.forcewave.spatial.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.forcewave.safety.vo.SafetyVO;
+import kr.or.forcewave.spatial.dao.SpatialDAO;
+import kr.or.forcewave.spatial.vo.ResultVO;
+
+@Service
+public class SpatialServiceImpl implements SpatialService {
+
+	@Inject
+	private SpatialDAO dao;
+	
+	@Override
+	public List<SafetyVO> retrieveSafetyList(String clicked) {
+		return dao.selectSafetyList(clicked);
+	}
+
+	@Override
+	public ResultVO retrieveAnalysis(int condNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

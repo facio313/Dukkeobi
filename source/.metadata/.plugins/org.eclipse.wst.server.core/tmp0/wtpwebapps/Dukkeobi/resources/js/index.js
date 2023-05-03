@@ -4,7 +4,7 @@ const url = "http://localhost:8888/geoserver/wms";
 let vworldKey = "783D66F2-A36F-3995-B0D6-35F1429C1BFE";
 
 //좌표계 설정
-proj4.defs('EPSG:3857', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
+proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
 ol.proj.proj4.register(proj4);
 
 let bgLayer = [
@@ -320,7 +320,6 @@ map.on('singleclick', function(event) {
 	    	.then((json) => {
 				let properties = json.features[0].properties;
 				whatshere(properties.bd_mgt_sn);
-				console.log(hereInfo);
 				
 				let x = properties.x;
 				let y = properties.y;
@@ -349,12 +348,13 @@ map.on('singleclick', function(event) {
 	                  content: `
 	                  			${juso} ${geonmul} ${geonmulD}
 	                  			<hr>
-	                  			<div>안전시설${hereInfo.publics.length > 0 ? "(" + hereInfo.publics.length + ") : " + hereInfo.publics[0] + "..." : "(0)"}</div>
-	                  			<div>안전시설${hereInfo.edus.length > 0 ? "(" + hereInfo.edus.length + ") : " + hereInfo.edus[0] + "..." : "(0)"}</div>
-	                  			<div>안전시설${hereInfo.healths.length > 0 ? "(" + hereInfo.healths.length + ") : " + hereInfo.healths[0] + "..." : "(0)"}</div>
-	                  			<div>안전시설${hereInfo.convis.length > 0 ? "(" + hereInfo.convis.length + ") : " + hereInfo.convis[0] + "..." : "(0)"}</div>
-	                  			<div>안전시설${hereInfo.safes.length > 0 ? "(" + hereInfo.safes.length + ") : " + hereInfo.safes[0] + "..." : "(0)"}</div>
-	                  			<div>자연시설${hereInfo.natures.length > 0 ? "(" + hereInfo.natures.length + ") : " + hereInfo.natures[0] + "..." : "(0)"}</div>
+	                  			<h6>위치 내 500m 현황</h6>
+	                  			<div>공공시설${hereInfo.publics.length > 0 ? "(" + hereInfo.publics.length + ") : " + hereInfo.publics[0] + " 외" : "(0)"}</div>
+	                  			<div>교육시설${hereInfo.edus.length > 0 ? "(" + hereInfo.edus.length + ") : " + hereInfo.edus[0] + " 외" : "(0)"}</div>
+	                  			<div>의료시설${hereInfo.healths.length > 0 ? "(" + hereInfo.healths.length + ") : " + hereInfo.healths[0] + " 외" : "(0)"}</div>
+	                  			<div>편의시설${hereInfo.convis.length > 0 ? "(" + hereInfo.convis.length + ") : " + hereInfo.convis[0] + " 외" : "(0)"}</div>
+	                  			<div>안전시설${hereInfo.safes.length > 0 ? "(" + hereInfo.safes.length + ") : " + hereInfo.safes[0] + " 외" : "(0)"}</div>
+	                  			<div>자연시설${hereInfo.natures.length > 0 ? "(" + hereInfo.natures.length + ") : " + hereInfo.natures[0] + " 외" : "(0)"}</div>
 	                  			`,
 	                  html: true,
 	                  placement: 'top',
@@ -562,11 +562,11 @@ function addRe(url, sor) {
 // 목록 보기 버튼 눌렀을 때
 $("#safetyListBtn").on("click", function() {
 	let checked = $("[name=safety]:checked"); // 버튼을 눌렀을 때 체크된 것
-	let endClick = clickList[clickList.length - 1];
+	let endClick = sclickList[sclickList.length - 1];
 	let list = $("#safetyList");
 	// 목록이 안 보일 때 => 보여주기
 	if (list.css("visibility") == "hidden") {
-		list.css({"left":"25%", "width":"74%", "padding":"4%", "visibility":"visible"});
+		list.css({"left":"25%", "width":"74%", "padding":"4%", "visibility":"visible"}).show();
 		list.children().show();
 		
 		// 목록 보여준 후 메뉴는 라디오 버튼으로 바꾸기
@@ -605,7 +605,7 @@ $("#safetyListBtn").on("click", function() {
 	} else {
 	// 목록이 보일 때 => 숨겨주기
 		list.children().hide();
-		list.css({"width":"0%", "padding":"0%", "visibility":"hidden"});
+		list.css({"width":"0%", "padding":"0%", "visibility":"hidden"}).hide();
 		let safeties = $("[name=safety]").attr("type", "checkBox").off("change");
 		// 포인트 layer 다 지워주기
 		$.each(safeties, function(index, safety) {
@@ -626,7 +626,11 @@ makeOptionTag(selectEmd2[0], emdList);
 
 // 안전현황 태그 만들기
 function makeSafetyTbodyTag(safety) {
-	return $("<tr>").append(
+	let emdd = safety.safetyEmd;
+	if (emdd == null) {
+		emdd="성산동";
+	}
+	return $("<tr>").addClass(emdd.replace("서울특별시 마포구 ", "").substring(0, 3)).addClass("safetyTr").append(
 		$("<td>").html(safety.safetyGubun)
 		, $("<td>").html(safety.safetyCode)
 		, $("<td>").html(safety.safetyNm)
@@ -647,9 +651,7 @@ function addSafetyList(sort) {
 		success: function(list) {
 			let tbodyTag = [];
 			$.each(list, function(index, safety){
-				if (index < 7) {
-					tbodyTag.push(makeSafetyTbodyTag(safety));
-				}
+				tbodyTag.push(makeSafetyTbodyTag(safety));
 			});
 			safetyTbody.html(tbodyTag);
 		},
@@ -659,6 +661,7 @@ function addSafetyList(sort) {
 			console.log(error);
 		}
 	}).then(() => {
+		// 수정버튼 누르기
 		$(".safetyModify").on("click", function() {
 			let gid = $(this).siblings("input").val();
 		});
@@ -666,8 +669,63 @@ function addSafetyList(sort) {
 		$(".safetyRemove").on("click", function() {
 			safetyRemove(this);
 		});
+		
+		//읍면동 고르기
+		
+		selectEmd2.on("change", function() {
+			thisEmd = this.value;
+			if (thisEmd == "망원1동" || thisEmd == "망원2동") {
+				thisEmd = "망원동";
+			} else if (thisEmd == "성산1동" || thisEmd == "성산2동") {
+				thisEmd = "성산동";
+			} 
+			$(".safetyTr").hide();
+			$("." + thisEmd).show();
+		});
+		
+		// 지도로 보기 버튼 누르면 해당 읍면동 지도 및 현황들!
+		$("#safetyEmd").on("click", function() {
+			let emddd = $(this).prev().val();
+			let sort = $("input[name=safety]:checked").attr("id");
+			$("#safetyList").hide();
+			
+			// 동 고른 곳으로 이동
+			removeLayer("adm_nm");
+			searchEmd(url, emddd);
+			move(emddd);
+			
+			// 그 동 관련 safety만 가져오기
+			removeLayer("safetyTotal");
+			let layer;
+			if (sort != "safetyTotal") {
+				layer = new ol.layer.Tile({
+					name : "safetyTotal",
+				 	source: new ol.source.TileWMS({
+				   		url: url,
+				   		params: {
+							layers: "Dukkeobi:safety",
+							styles: "safety_safetyTotal",
+							cql_filter: `safety_emd like '서울특별시 마포구 ${emddd}%' and safety_sort = '${sort}'`
+				         },
+				 	}),				
+				});
+			} else {
+				layer = new ol.layer.Tile({
+					name : "safetyTotal",
+				 	source: new ol.source.TileWMS({
+				   		url: url,
+				   		params: {
+							layers: "Dukkeobi:safety",
+							styles: "safety_safetyTotal",
+							cql_filter: `safety_emd like '서울특별시 마포구 ${emddd}%'`
+				         },
+				 	}),				
+				});
+				
+			}
+			map.addLayer(layer);
+		});
 	});
-	
 }
 
 // 안전현황 등록 폼 띄우기
@@ -862,7 +920,7 @@ $("#condForm").on("submit", function(event) {
 // 조건 분류하기
 function sorting(cond) {
 	let tds = ["지하철", "버스", "택시", "자전거", "도보"];
-	let cds = ["백화점", "마트", "편의점", "외부화장실", "영화관", "운동시설", "노래방", "영화관"];
+	let cds = ["백화점", "마트", "편의점", "외부화장실", "영화관", "운동시설", "노래방", "PC방"];
 	let mds = ["병원", "약국", "보건소", "요양소"];
 	let ads = ["행정복지센터", "구청", "시청", "공기업", "정부기관"];
 	let sds = ["대학교", "고등학교", "중학교", "초등학교", "유치원", "학원", "평생교육원"];
@@ -915,19 +973,25 @@ function cDetailTag(cond) {
 	tags.push($("<div>").html("지정동 : " + cond.condEmd));
 	tags.push($("<div>").html("반경 : " + cond.condRange));
 	tags.push($("<hr>"));
+	tags.push($("<div>").html("주거형태 : " + cond.condRange));
+	tags.push($("<div>").html("보증금 : " + cond.condRange));
+	tags.push($("<div>").html("월세 : " + cond.condRange));
+	tags.push($("<hr>"));
 	tags.push($("<div>").html("교통 조건 : " + sorted.traffics));
 	tags.push($("<div>").html("편의 조건 : " + sorted.convis));
 	tags.push($("<div>").html("의료 조건 : " + sorted.medicals));
 	tags.push($("<div>").html("공공 조건 : " + sorted.admins));
 	tags.push($("<div>").html("학군 조건 : " + sorted.schools));
 	tags.push($("<div>").html("자연 조건 : " + sorted.natures));
-	tags.push($("<button>").html("수정하기").addClass("btn btn-secondary"));
+	tags.push($("<button>").html("수정하기").addClass("btn btn-secondary").attr("id", "condModify"));
 	tags.push($("<button>").html("분석하기").addClass("btn btn-primary").attr("id", "condAnal").val(cond.condNo));
 	return  tags;
 }
 // 조건 상세 정보
 function addCDetail(condNo) {
 	$("#cDetailTable").empty();
+	let firstId;
+	
 	$.ajax({
 		url: `${context}/cond/getCond?condNo=${condNo}`,
 		method: "get",
@@ -940,20 +1004,131 @@ function addCDetail(condNo) {
 			console.log(error);
 		}		
 	}).then(() => {
+		// 조건 분석하기
 		$("#condAnal").on("click", function() {
+			let rThead = $("#rThead");
+			let rTbody = $("#rTbody")
 			$("#cdContainer").hide();
 			$("#cSide").hide();
 			$("#aSide").css({"visibility":"visible", "width":"23%"}).show();
+			
+			// 조건 가져오기
+			let aCond = $("#aCond");
+			aCond.empty();
+			$.ajax({
+				url: `${context}/cond/getCond?condNo=${condNo}`,
+				method: "get",
+				success: function(cond){
+					aCond.append(cTag(cond));
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(status);
+					console.log(error);
+				}		
+			});
+			
+			// 분석 내용 가져오기
+			let aTbody = $("#aTbody");
+			aTbody.empty();
+			$.ajax({
+				url: `${context}/spatial/analyze?condNo=${condNo}`,
+				method: "post",
+				contentType: "application/json; charset=utf-8",
+				success: function(resultList){
+					console.log(resultList);
+					let aTbodyTag = [];
+					$.each(resultList, function(index, result) {
+						aTbodyTag.push(tSimpleTag(result));
+					});
+					aTbody.html(aTbodyTag);
+					
+					rThead.empty();
+					rThead.html(makeResultHeadTag(resultList));
+					firstId = resultList[0].resultNo;
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(status);
+					console.log(error);
+				}
+			}).then(() => {
+				// 분석 내용 채우기 
+//				rTbody.empty();
+				$.ajax({
+					url: `${context}/spatial/result?resultNo=${firstId}`,
+					method: "get",
+					contentType: "application/json; charset=utf-8",
+					success: function(list){
+						console.log(list);
+//						rTbody.html(makeResultTag(list));
+					},
+					error : function(jqXHR, status, error) {
+						console.log(jqXHR);
+						console.log(status);
+						console.log(error);
+					}
+				})
+			});
 		});
 	});
 }
 
+// 주거적지 분석 버튼 누르기
 $("#analyze").on("click", function() {
 	if ($("#aSide").css("visibility") == "hidden") {
-//		$("#side").hide();
 		$("#aSide").css({"visibility":"visible", "width":"23%", "z-index":"99999"}).show();
 	} else {
 		$("#aSide").css({"visibility":"hidden", "width":"0%", "z-index":"1"}).hide();
-//		$("#side").show();
 	}
 });
+
+// 조건 상세
+function cTag(cond) {
+	let tags = [];
+	tags.push($("<h3>").attr("id", "condNm4").html(cond.condNm).val(cond.condNo));
+	tags.push($("<hr>"));
+	tags.push($("<div>").html("작성일 : " + cond.condDate));
+	tags.push($("<div>").html("지정동 : " + cond.condEmd));
+	tags.push($("<div>").html("반경 : " + cond.condRange));
+	tags.push($("<hr>"));
+	tags.push($("<div>").html("주거형태 : " + cond.condRe));
+	tags.push($("<div>").html("보증금 : " + cond.condRange));
+	tags.push($("<div>").html("월세 : " + cond.condRange));
+	return  tags;	
+}
+
+// 분석 간략 테이블 태그 만들기
+function tSimpleTag(result) {
+	return $("<tr>").append(
+		$("<td>").html(result.rank),
+		$("<td>").html(result.danji),
+		$('<td>').html(result.totalAvg)
+	);
+}
+
+$("#showResult").on("click", function() {
+	let rContainer = $("#rContainer");
+	if (rContainer.css("visibility") == "hidden") {
+		rContainer.children().show();
+		rContainer.css({"visibility":"visible", "width":"74%"});
+	} else {
+		rContainer.children().hide();
+		rContainer.css({"visibility":"hidden", "width":"0%"});
+	}
+});
+
+// 분석 결과 테이블 태그 만들기
+function makeResultHeadTag(resultList) {
+	return $("<tr>").append($("<th>"), $("<th>").html(resultList[0].danji), $("<th>").html(resultList[1].danji), $("<th>").html(resultList[2].danji));
+}
+function makeResultTag(list) {
+	let rTag = [];
+	rTag.push($("<tr>").append($("<th>").html("주소"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("총점평균"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("거래정보"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("500m 내 지하철"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("500m 내 편의점"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("500m 내 병원"), $("<td>"), $("<td>"), $("<td>")));
+	return rTag;
+}

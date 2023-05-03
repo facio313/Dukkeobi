@@ -7,10 +7,10 @@
   <NamedLayer>
     <Name>re_oj</Name>
     <UserStyle>
-      <Title>dark orange square point style</Title>
+      <Title>cyan square point style</Title>
       <FeatureTypeStyle>
         <Rule>
-          <Title>dark orange point</Title>
+          <Title>cyan point</Title>
           <PointSymbolizer>
             <Graphic>
               <Mark>
@@ -23,7 +23,6 @@
             </Graphic>
           </PointSymbolizer>
         </Rule>
-
       </FeatureTypeStyle>
     </UserStyle>
   </NamedLayer>

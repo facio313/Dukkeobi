@@ -108,7 +108,7 @@ body {
 	position: absolute; 
 	top: 13%;
 	left: 1%;
-	z-index: 99999;
+	z-index: 99994;
 	width: 0%;
 	height: 85%;
 	transition: all 0.8s;
@@ -226,6 +226,7 @@ body {
 	padding: 0%;
 	transition: all 0.5s;
 	visibility: hidden;
+	overflow: auto;
 }
 #safetySearch {
 	width: 30%;
@@ -243,7 +244,7 @@ body {
 }
 #safetyAdd {
 	position: relative;
-	left: 30%;
+	left: 20%;
 }
 #poiListBtn {
 	position: absolute;
@@ -617,6 +618,15 @@ input[name="re"] {
 	transition: all 0.5s;
 	left: 100%;
 }
+#condResett {
+	display: none;
+}
+#condModify {
+	margin-top: 5%;
+}
+#condAnal {
+	margin-top: 5%;
+}
 /* srf-005 */
 #aSide {
 	position: absolute; 
@@ -634,14 +644,7 @@ input[name="re"] {
 	width: 100%;
 	height: 35%;
 	border: 5px dotted gray;
-	padding-top: 10%;
-	display: flex;
-	text-align: center;
-	justify-content: center;
-	align-items: center;
-    flex-wrap: wrap;
-    align-content: center;
-    flex-direction: column;
+	padding-top: 5%;
     transition: all 0.5s;
     margin-bottom: 10%;
 }
@@ -654,4 +657,32 @@ input[name="re"] {
 	position: absolute;
 	top: 49%;
 	left: 80%;
+}
+/* rfp-005 */
+#rContainer {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 4%;
+	transition: all 0.5s;
+	visibility: hidden;	
+}
+#rListTable{
+	transition: all 0.5s;
+}
+th {
+	text-align: center;
+}
+#rThead > tr > th {
+	font-size: 2rem;
+	white-space: nowrap;
+}
+#rTbody > tr {
+	height: 75px;
+}
+#rTbody > tr > td {
+	text-align: center;
 }

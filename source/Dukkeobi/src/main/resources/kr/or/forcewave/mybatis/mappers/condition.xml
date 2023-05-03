@@ -11,7 +11,7 @@
 	<select id="selectCond" parameterType="int" resultType="kr.or.forcewave.condition.vo.CondVO">
 		SELECT *
 		FROM COND
-		WHERE COND_NO = #{condNo}
+		WHERE COND_NO = CAST(#{condNo} AS INTEGER)
 	</select>
 
 	<insert id="insertCond">
@@ -25,6 +25,9 @@
 			COND_EMD,
 			COND_RANGE,
 			COND_DETAILS,
+			COND_RE,
+			COND_RE_RANGE1,
+			COND_RE_RANGE2,
 			COND_DATE
 		) VALUES (
 			${condNo},
@@ -32,6 +35,9 @@
 			#{condEmd},
 			#{condRange},
 			#{condDetails},
+			#{condRe},
+			#{condReRange1},
+			#{condReRange2},
 			(SELECT NOW())
 		)
 	</insert>

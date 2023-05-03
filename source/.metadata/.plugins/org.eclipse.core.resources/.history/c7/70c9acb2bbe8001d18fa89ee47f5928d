@@ -1,0 +1,32 @@
+package kr.or.forcewave.spatial.vo;
+
+import java.util.List;
+
+import kr.or.forcewave.safety.vo.SafetyVO;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+//@Data
+@NoArgsConstructor
+@ToString
+public class ResultVO {
+	private String safetySort;
+	private String danji;
+	private String bdMgtSn;
+	private int cnt;
+	
+	private int rank;
+	private int totalScore;
+	
+	private int publicScore;
+	private int eduScore;
+	private int healthScore;
+	private int conviScore;
+	private int safeScore;
+	private int natureScore;
+	
+	private List<SafetyVO> safetyList;
+	
+	
+}

@@ -1,0 +1,12 @@
+package kr.or.forcewave.spatial.service;
+
+import java.util.List;
+
+import kr.or.forcewave.safety.vo.SafetyVO;
+import kr.or.forcewave.spatial.vo.ResultVO;
+
+public interface SpatialService {
+	
+	public List<SafetyVO> retrieveSafetyList(String clicked);
+	public ResultVO retrieveAnalysis(int condNo);
+}

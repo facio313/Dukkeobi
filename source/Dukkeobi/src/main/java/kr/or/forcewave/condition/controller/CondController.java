@@ -41,6 +41,7 @@ public class CondController {
 	public CondVO getCond(
 		@RequestParam("condNo") int condNo
 	) {
+		System.out.println(condNo);
 		return service.retrieveCond(condNo);
 	}
 	

@@ -21,7 +21,24 @@
               <CssParameter name="stroke-width">0.5</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
-
+        </Rule>
+        <Rule>
+          <TextSymbolizer>
+           <Geometry>
+            <ogc:Function name="centroid">
+             <ogc:PropertyName>geom</ogc:PropertyName>
+            </ogc:Function>
+           </Geometry>
+           <Label>
+            <ogc:PropertyName>adm_nm</ogc:PropertyName>
+           </Label>
+           <Font>
+            <CssParameter name="font-family">¸¼Àº °íµñ BOLD</CssParameter>
+            <CssParameter name="font-size">12</CssParameter>
+            <CssParameter name="font-style">normal</CssParameter>
+            <CssParameter name="font-weight">bold</CssParameter>
+           </Font>
+          </TextSymbolizer>          
         </Rule>
         
       </FeatureTypeStyle>
