@@ -1,6 +1,7 @@
 package kr.or.forcewave.spatial.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,6 +20,7 @@ public interface SpatialDAO {
 	 * @return 분석결과
 	 */
 	public ResultVO selectResult(int resultNo);
+	public Map<String, String> selectEtc(String danji);;
 	
 	/**
 	 * @param condNo
@@ -29,4 +31,10 @@ public interface SpatialDAO {
 	public List<ResultVO> selectAnalysis(CondVO cond);
 	
 	public int insertResult(ResultVO result);
+	
+	public List<ResultVO> selectHeart();
+	public int updateHeart(int resultNo);
+	public int deleteHeart(int resultNo);
+	
+	public List<Map<String, String>> selectReList();
 }

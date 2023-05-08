@@ -1,5 +1,0 @@
-package kr.or.forcewave.safety.service;
-
-public class SafetyServiceImpl implements SafetyService {
-
-}

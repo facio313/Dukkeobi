@@ -1,9 +1,0 @@
-package kr.or.forcewave.safety.service;
-
-import org.springframework.stereotype.Service;
-
-@Service
-public interface SafetyService {
-
-	public List<SafetyVO>
-}

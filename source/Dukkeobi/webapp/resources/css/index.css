@@ -320,7 +320,7 @@ body {
 }
 #reAdd {
 	position: relative;
-	left: 30%;
+	left: 20%;
 }
 #poiListBtn {
 	position: absolute;
@@ -564,6 +564,7 @@ input[name="re"] {
 	width: 70%;
 }
 #areaRange {
+	margin-top: 10%;
 	margin-left: 15%;
 	width: 70%;
 }
@@ -614,6 +615,11 @@ input[name="re"] {
 	transition: all 0.5s;
 }
 #cDetailTable{
+	visibility: hidden;
+	transition: all 0.5s;
+	left: 100%;
+}
+#hDetailTable{
 	visibility: hidden;
 	transition: all 0.5s;
 	left: 100%;
@@ -677,12 +683,49 @@ th {
 	text-align: center;
 }
 #rThead > tr > th {
-	font-size: 2rem;
+	font-size: 1.25rem;
 	white-space: nowrap;
 }
 #rTbody > tr {
 	height: 75px;
 }
 #rTbody > tr > td {
+	text-align: center;
+}
+#cTbody > tr > td {
+	text-align: center;
+}
+/* rfp-006 */
+#hContainer {
+	position: absolute; 
+	top: 13%;
+	left: 25%;
+	width: 0%;
+	height: 85%;
+	z-index: 99999;
+	padding: 4%;
+	transition: all 0.5s;
+	visibility: hidden;	
+}
+#hListTable{
+	transition: all 0.5s;
+}
+th {
+	text-align: center;
+}
+#hThead > tr > th {
+	font-size: 2rem;
+	white-space: nowrap;
+}
+#hTbody > tr {
+	height: 75px;
+}
+#hTbody > tr > td {
+	text-align: center;
+}
+#hTbody > tr > td {
+	text-align: center;
+}
+#reTbody > tr > td {
 	text-align: center;
 }

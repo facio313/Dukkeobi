@@ -1,8 +1,0 @@
-package kr.or.forcewave.spatial.service;
-
-import org.springframework.stereotype.Service;
-
-@Service
-public class SpatialServiceImpl implements SpatialService {
-
-}

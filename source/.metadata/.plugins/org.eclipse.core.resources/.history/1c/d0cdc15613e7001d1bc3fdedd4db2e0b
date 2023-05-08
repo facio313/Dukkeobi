@@ -1,5 +1,0 @@
-package kr.or.forcewave.condition.service;
-
-public class CondServiceImpl implements CondService {
-
-}

@@ -1,7 +1,0 @@
-package kr.or.forcewave.vo;
-
-public class CodeVO {
-	String codeSn
-	String codeNm
-	String codePre
-}

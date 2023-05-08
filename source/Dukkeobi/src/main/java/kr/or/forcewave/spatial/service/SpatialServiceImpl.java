@@ -37,6 +37,34 @@ public class SpatialServiceImpl implements SpatialService {
 									spatialDao.selectResult(resultNo + 1),
 									spatialDao.selectResult(resultNo + 2)
 								);
+		list.stream().forEach(r -> {
+			Map<String, String> map = spatialDao.selectEtc(r.getDanji());
+			if (map != null) {
+				if (map.get("subways") != null) {
+					r.setSubways(map.get("subways"));
+				} else {
+					r.setSubways("주변에 존재하는 지하철역이 없습니다.");
+				}
+				if  (map.get("stops") != null) {
+					r.setStops(map.get("stops"));
+				} else {
+					r.setStops("주변에 존재하는 버스 정류장이 없습니다.");
+				}
+				if (map.get("convis") != null) {
+					r.setConvis(map.get("convis"));
+				} else {
+					r.setConvis("주변에 존재하는 편의점이 없습니다.");
+					
+				}
+			} else {
+				r.setSubways("주변에 존재하는 지하철역이 없습니다.");
+				r.setStops("주변에 존재하는 버스 정류장이 없습니다.");
+				r.setConvis("주변에 존재하는 편의점이 없습니다.");
+				
+			}
+		});
+		
+		list.stream().forEach(System.out::println);
 		return list;
 	}
 	
@@ -253,7 +281,26 @@ public class SpatialServiceImpl implements SpatialService {
 	}
 	
 	public static double getT(double z) {
-		// 100점만점 기준 T점수화 원래는 10*z+50
-		return 20 * z + 50;
+		return 10 * z + 50;
+	}
+
+	@Override
+	public List<ResultVO> retireveHeart() {
+		return spatialDao.selectHeart();
+	}
+
+	@Override
+	public int modifyHeart(int resultNo) {
+		return spatialDao.updateHeart(resultNo);
+	}
+
+	@Override
+	public int deleteHeart(int resultNo) {
+		return spatialDao.deleteHeart(resultNo);
+	}
+
+	@Override
+	public List<Map<String, String>> selectReList() {
+		return spatialDao.selectReList();
 	}
 }

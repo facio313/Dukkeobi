@@ -1,6 +1,7 @@
 package kr.or.forcewave.spatial.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,4 +51,31 @@ public class SpatialController {
 		return service.retrieveResult(resultNo);
 	}
 	
+	@ResponseBody
+	@GetMapping(value="/heart", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<ResultVO> getHeartList() {
+		return service.retireveHeart();
+	}
+	
+	@ResponseBody
+	@PostMapping("/updateHeart")
+	public void updateHeart(
+		@RequestParam("resultNo") int resultNo
+	) {
+		service.modifyHeart(resultNo);
+	}
+	
+	@ResponseBody
+	@PostMapping("/deleteHeart")
+	public void deleteHeart(
+		@RequestParam("resultNo") int resultNo
+	) {
+		service.deleteHeart(resultNo);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/reList", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<Map<String, String>> getReList() {
+		return service.selectReList();
+	}
 }

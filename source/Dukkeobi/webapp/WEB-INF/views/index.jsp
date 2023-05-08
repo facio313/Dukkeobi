@@ -191,6 +191,49 @@
 	</div>
 </div>
 
+<!-- 실거래가 -->
+<div id="reList" class="tile">
+	<div class="sideHeader">주거 현황 조회</div>
+	<input type="text" id="reSearch" placeholder="키워드로 검색하기"/>
+	<div id="reSelect">
+		<select class="form-control reSelect"><option>서울특별시</option></select>
+		<select id="selectSgg2" class="form-control safetySelect"><option>마포구</option></select>
+		<select class="form-control safetySelect"><option>읍/면/동</option></select>
+		<button id="reEmd" class="btn btn-primary">지도로 보기</button>
+		<button id="reAdd" onclick="reForm()" class="btn btn-primary">등록하기</button>
+	</div>
+	<div>
+		<table class="table table-hover">
+	        <colgroup>
+	            <col width=5%>
+	            <col width=40%>
+	            <col width=25%>
+	            <col width=5%>
+	            <col width=5%>
+	            <col width=10%>
+	            <col width=10%>
+	        </colgroup>			
+			<thead>
+				<tr>
+					<th></th>
+					<th>주소</th>
+					<th>단지</th>
+					<th>층</th>
+					<th>구분</th>
+					<th>보증금</th>
+					<th>월세</th>
+				</tr>
+			</thead>
+			<tbody id="reTbody">
+				
+			</tbody>
+			<tfoot>
+			
+			</tfoot>
+		</table>
+	</div>
+</div>
+
 <!-- 배경지도 주제도 -->
 <div id="control" class="tile">
 	<label class="onOff" id="base"><input type="radio" name="theme" value="base" checked>기본</label>
@@ -268,12 +311,6 @@
 						<select id="cSelectSgg" class="form-control cSelectForm"></select>
 						<select id="cSelectEmd" name="condEmd" class="form-control cSelectForm"></select>					
 					</div>
-					<div class="resultForm cJuso">
-						선택한 주소 : 
-						<span id="cSido">시/도 </span>
-						<span id="cSgg">시/군/구</span>
-						<span id="cEmd">읍/면/동</span>
-					</div>					
 					<input id="areaRange" type="range" name="condRange" value="${not empty condRange ? condRange : 1500}" step="100" min="500" max="3000" oninput="document.getElementById('value1').innerHTML=this.value;">
 					<div id="areaDiv">
 						<span id="areaMin"></span>
@@ -417,7 +454,7 @@
 			<thead>
 				<tr>
 					<th>순위</th>
-					<th>주소</th>
+					<th>건물</th>
 					<th>점수</th>
 				</tr>
 			</thead>
@@ -502,6 +539,47 @@
 	
 	</div>
 </div>
+
+<div id="hContainer" class="tile">
+	<div class="sideHeader">주거적지 목록</div>
+	<div id="hListTable">
+		<table class="table table-hover">
+	        <colgroup>
+	            <col width=5%>
+	            <col width=20%>
+	            <col width=35%>
+	            <col width=5%>
+	            <col width=5%>
+	            <col width=5%>
+	            <col width=15%>
+	            <col width=10%>
+	        </colgroup>			
+			<thead id="hThead">
+				<tr>
+					<th></th>
+					<th>단지명</th>
+					<th>주소</th>
+					<th>총점</th>
+					<th>순위</th>
+					<th>표준점수</th>
+					<th>분석날짜</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="hTbody">
+			
+			</tbody>
+			<tfoot>
+			
+			</tfoot>
+		</table>		
+	</div>
+	<div id="hDetailTable">
+	
+	</div>
+</div>
+
+
 
 <script src="${context}/resources/js/ol/ol.js"></script>
 <script src="${context}/resources/js/ol/jsts.min.js"></script>

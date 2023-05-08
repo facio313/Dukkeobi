@@ -1,8 +1,0 @@
-package kr.or.forcewave.index.dao;
-
-import org.apache.ibatis.annotations.Mapper;
-
-@Mapper
-public interface IndexDAO {
-
-}

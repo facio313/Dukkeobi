@@ -906,6 +906,7 @@ $("#condForm").on("submit", function(event) {
 		data: cond,
 		success: function(){
 			addCTbody();
+			alert("주거적지 탐색 조건을 저장하였습니다.");
 		},
 		error : function(jqXHR, status, error) {
 			console.log(jqXHR);
@@ -973,9 +974,9 @@ function cDetailTag(cond) {
 	tags.push($("<div>").html("지정동 : " + cond.condEmd));
 	tags.push($("<div>").html("반경 : " + cond.condRange));
 	tags.push($("<hr>"));
-	tags.push($("<div>").html("주거형태 : " + cond.condRange));
-	tags.push($("<div>").html("보증금 : " + cond.condRange));
-	tags.push($("<div>").html("월세 : " + cond.condRange));
+	tags.push($("<div>").html("주거형태 : " + cond.condRe));
+	tags.push($("<div>").html("보증금 : " + cond.condReRange1));
+	tags.push($("<div>").html("월세 : " + cond.condReRange2));
 	tags.push($("<hr>"));
 	tags.push($("<div>").html("교통 조건 : " + sorted.traffics));
 	tags.push($("<div>").html("편의 조건 : " + sorted.convis));
@@ -1036,7 +1037,6 @@ function addCDetail(condNo) {
 				method: "post",
 				contentType: "application/json; charset=utf-8",
 				success: function(resultList){
-					console.log(resultList);
 					let aTbodyTag = [];
 					$.each(resultList, function(index, result) {
 						aTbodyTag.push(tSimpleTag(result));
@@ -1054,21 +1054,40 @@ function addCDetail(condNo) {
 				}
 			}).then(() => {
 				// 분석 내용 채우기 
-//				rTbody.empty();
+				rTbody.empty();
 				$.ajax({
 					url: `${context}/spatial/result?resultNo=${firstId}`,
 					method: "get",
 					contentType: "application/json; charset=utf-8",
 					success: function(list){
-						console.log(list);
-//						rTbody.html(makeResultTag(list));
+						rTbody.html(makeResultTag(list));
 					},
 					error : function(jqXHR, status, error) {
 						console.log(jqXHR);
 						console.log(status);
 						console.log(error);
 					}
-				})
+				}).then(() => {
+					$(".heart").on("click", function() {
+						let resultNo = parseInt($(this).val());
+						console.log(resultNo);
+						let heartBtn = $(this);
+						$.ajax({
+							url: `${context}/spatial/updateHeart?resultNo=${resultNo}`,
+							method: "post",
+							contentType: "application/json; charset=utf-8",
+							success: function(){
+								heartBtn.prop("disabled", true).html("찜 됨");
+								alert("찜으로 등록하였습니다.");
+							},
+							error : function(jqXHR, status, error) {
+								console.log(jqXHR);
+								console.log(status);
+								console.log(error);
+							}
+						});
+					});
+				});
 			});
 		});
 	});
@@ -1093,8 +1112,8 @@ function cTag(cond) {
 	tags.push($("<div>").html("반경 : " + cond.condRange));
 	tags.push($("<hr>"));
 	tags.push($("<div>").html("주거형태 : " + cond.condRe));
-	tags.push($("<div>").html("보증금 : " + cond.condRange));
-	tags.push($("<div>").html("월세 : " + cond.condRange));
+	tags.push($("<div>").html("보증금 : " + cond.condReRange1));
+	tags.push($("<div>").html("월세 : " + cond.condReRange2));
 	return  tags;	
 }
 
@@ -1124,11 +1143,120 @@ function makeResultHeadTag(resultList) {
 }
 function makeResultTag(list) {
 	let rTag = [];
-	rTag.push($("<tr>").append($("<th>").html("주소"), $("<td>"), $("<td>"), $("<td>")));
-	rTag.push($("<tr>").append($("<th>").html("총점평균"), $("<td>"), $("<td>"), $("<td>")));
-	rTag.push($("<tr>").append($("<th>").html("거래정보"), $("<td>"), $("<td>"), $("<td>")));
-	rTag.push($("<tr>").append($("<th>").html("500m 내 지하철"), $("<td>"), $("<td>"), $("<td>")));
-	rTag.push($("<tr>").append($("<th>").html("500m 내 편의점"), $("<td>"), $("<td>"), $("<td>")));
-	rTag.push($("<tr>").append($("<th>").html("500m 내 병원"), $("<td>"), $("<td>"), $("<td>")));
+	rTag.push($("<tr>").append($("<th>").html("주소"), $("<td>").html(list[0].addr), $("<td>").html(list[1].addr), $("<td>").html(list[2].addr)));
+	rTag.push($("<tr>").append($("<th>").html("총점평균"), $("<td>").html(list[0].totalAvg), $("<td>").html(list[1].totalAvg), $("<td>").html(list[2].totalAvg)));
+	rTag.push($("<tr>").append($("<th>").html("거래정보"), $("<td>").html(list[0].price), $("<td>").html(list[1].price), $("<td>").html(list[2].price)));
+	rTag.push($("<tr>").append($("<th>").html("1km 내 지하철"), $("<td>").html(list[0].subways.substring(0, 60) + "..."), $("<td>").html(list[1].subways.substring(0, 60) + "..."), $("<td>").html(list[2].subways.substring(0, 60) + "...")));
+	rTag.push($("<tr>").append($("<th>").html("1km 내 버스정류장"), $("<td>").html(list[0].stops.substring(0, 60) + "..."), $("<td>").html(list[1].stops.substring(0, 60) + "..."), $("<td>").html(list[2].stops.substring(0, 60) + "...")));
+	rTag.push($("<tr>").append($("<th>").html("1km 내 편의점"), $("<td>").html(list[0].convis.substring(0, 60) + "..."), $("<td>").html(list[1].convis.substring(0, 60) + "..."), $("<td>").html(list[2].convis.substring(0, 60) + "...")));
+	rTag.push($("<tr>").append($("<th>").html("찜하기"), $("<td>").append($("<button>").val(list[0].resultNo).addClass("heart btn btn-primary").html("찜하기")), $("<td>").append($("<button>").val(list[1].resultNo).addClass("heart btn btn-primary").html("찜하기")), $("<td>").append($("<button>").val(list[2].resultNo).addClass("heart btn btn-primary").html("찜하기"))));
 	return rTag;
 }
+
+// 찜 목록 태그 만들기
+function makeHeartTag(index, result) {
+	return $("<tr>").append(
+		$("<td>").html(index + 1),
+		$("<td>").html(result.danji),
+		$("<td>").html(result.addr),
+		$("<td>").html(result.cnt),
+		$("<td>").html(result.rank),
+		$("<td>").html(result.totalScore),
+		$("<td>").html(result.date),
+		$("<td>").html($("<button>").html("삭제").addClass("btn btn-danger removeHeart").attr("name", result.resultNo))
+	);
+}
+
+// 찜한 목록 나타내기
+$("#history").on("click", function() {
+	let hContainer = $("#hContainer");
+	if (hContainer.css("visibility") == "hidden") {
+		hContainer.children().show();
+		hContainer.css({"visibility":"visible", "width":"74%"});
+		let hTbody = $("#hTbody");
+		$.ajax({
+			url: `${context}/spatial/heart`,
+			method: "get",
+			contentType: "application/json; charset=utf-8",
+			success: function(list){
+				hTbody.empty();
+				let tags = [];
+				$.each(list, function(index, result){
+					console.log(result.resultNo);
+					tags.push(makeHeartTag(index, result));
+				});
+				hTbody.html(tags);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		}).then(() => {
+			$(".removeHeart").on("click", function() {
+				let rHeartNo = parseInt($(this).attr("name"));
+				$.ajax({
+					url: `${context}/spatial/deleteHeart?resultNo=${rHeartNo}`,
+					method: "post",
+					contentType: "application/json; charset=utf-8",
+					success: function(){
+						alert("찜한 목록에서 삭제되었습니다.");
+						$("#history").trigger("click");
+					},
+					error : function(jqXHR, status, error) {
+						console.log(jqXHR);
+						console.log(status);
+						console.log(error);
+					}
+				});
+			});
+		});
+	} else {
+		hContainer.children().hide();
+		hContainer.css({"visibility":"hidden", "width":"0%"});
+	}	
+});
+
+function reTag(index, item) {
+	return $("<tr>").append(
+		$("<td>").html(index + 1),
+		$("<td>").html(item.addr),
+		$("<td>").html(item.danji),
+		$("<td>").html(item.floor),
+		$("<td>").html(item.lease),
+		$("<td>").html(item.deposit),
+		$("<td>").html(item.cost)
+	);
+}
+
+$("#reListBtn").on("click", function() {
+	let list = $("#reList");
+	let reTbody = $("#reTbody");
+	if (list.css("visibility") == "hidden") {
+		reTbody.empty();
+		list.css({"left":"25%", "width":"74%", "padding":"4%", "visibility":"visible"}).show();
+		list.children().show();
+		$.ajax({
+			url: `${context}/spatial/reList`,
+			method: "get",
+			contentType: "application/json; charset=utf-8",
+			success: function(resp){
+				let tags = [];
+				$.each(resp, function(index, item) {
+					tags.push(reTag(index, item));
+				});
+				reTbody.html(tags);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}			
+		});
+		
+	} else {
+		list.children().hide();
+		list.css({"width":"0%", "padding":"0%", "visibility":"hidden"}).hide();
+	}
+});
+

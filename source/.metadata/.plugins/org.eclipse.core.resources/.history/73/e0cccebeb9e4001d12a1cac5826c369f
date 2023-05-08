@@ -1,5 +1,0 @@
-package kr.or.forcewave.index.service;
-
-public interface IndexService {
-
-}

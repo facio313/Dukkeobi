@@ -1,8 +1,0 @@
-package kr.or.forcewave.condition.vo;
-
-public class CondDetailVO {
-	String condSn;
-	String cdCode;
-	String cdDate;
-	String cdDeleteDate;
-}

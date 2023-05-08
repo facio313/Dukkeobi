@@ -63,25 +63,25 @@
 				<tr>
 					<th>위도</th>
 					<td>
-						<form:input path="safetyLon" cssClass="form-control" type="text" id="lon" placeholder="주소 선택 시 자동 입력됩니다."/>
+						<form:input path="safetyLon" cssClass="form-control" type="text" id="lon" placeholder="주소 선택 시 자동 입력됩니다." disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<th>경도</th>
 					<td>
-						<form:input path="safetyLat" cssClass="form-control" type="text" id="lat" placeholder="주소 선택 시 자동 입력됩니다."/>
+						<form:input path="safetyLat" cssClass="form-control" type="text" id="lat" placeholder="주소 선택 시 자동 입력됩니다." disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<th>x좌표</th>
 					<td>
-						<form:input path="safetyX" cssClass="form-control" type="text" id="x" placeholder="주소 선택 시 자동 입력됩니다."/>
+						<form:input path="safetyX" cssClass="form-control" type="text" id="x" placeholder="주소 선택 시 자동 입력됩니다." disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<th>y좌표</th>
 					<td>
-						<form:input path="safetyY" cssClass="form-control" type="text" id="y" placeholder="주소 선택 시 자동 입력됩니다."/>
+						<form:input path="safetyY" cssClass="form-control" type="text" id="y" placeholder="주소 선택 시 자동 입력됩니다." disabled="true"/>
 					</td>
 				</tr>
 			</tbody>
@@ -163,6 +163,7 @@ $("#form").on("submit", function(event) {
 				checkBoxs[i].checked = false;
 			}
 			window.opener.document.querySelector("#" + sort).checked = true;
+			alert("등록 성공");
 			window.close();
 		},
 		error : function(jqXHR, status, error) {

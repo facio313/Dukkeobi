@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=".get(a)"/>
+		<item key="selection" value="safetyListBtn"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="[a]"/>
-			<item value="log"/>
-			<item value="System"/>
-			<item value="Avg"/>
-			<item value="condAnal"/>
-			<item value="새로운"/>
-			<item value="console.log"/>
-			<item value="지도로 보기"/>
 			<item value="safetyListBtn"/>
-			<item value="list"/>
-			<item value="#safetyAdd"/>
-			<item value="safetyEmd"/>
-			<item value="주거 현황 조회"/>
-			<item value="원인"/>
-			<item value="addSafetyList"/>
+			<item value="safetyList"/>
+			<item value="safety"/>
+			<item value="reList"/>
+			<item value="scContainer.find"/>
+			<item value="cDetailTable"/>
+			<item value="rCon"/>
+			<item value="areaRange "/>
+			<item value="select4"/>
+			<item value="선택한 주소"/>
+			<item value="condsave"/>
+			<item value="check"/>
+			<item value="fom:"/>
+			<item value="disabled"/>
+			<item value="cTbody"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
+			<item value="item."/>
 			<item value=".get(a)"/>
 			<item value="Std"/>
 			<item value="re"/>
@@ -42,6 +44,6 @@
 		<item key="DIALOG_Y_ORIGIN" value="179"/>
 		<item key="DIALOG_WIDTH" value="322"/>
 		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|맑은 고딕"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
 	</section>
 </section>

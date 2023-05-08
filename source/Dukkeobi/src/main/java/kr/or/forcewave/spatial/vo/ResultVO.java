@@ -32,11 +32,12 @@ public class ResultVO {
 	// 분석 결과 정보
 	private String addr;
 	private String re;
-	private int reRange1;
-	private int reRange2;
+	private String price;
 	private String subways;
 	private String convis;
-	private String hospitals;
+	private String stops;
+	
+	private String heart;
 	
 	public void setTotalScore() {
 		int total = 0;

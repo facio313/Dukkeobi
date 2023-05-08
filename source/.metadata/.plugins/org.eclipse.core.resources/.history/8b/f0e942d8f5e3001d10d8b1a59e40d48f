@@ -1,6 +1,0 @@
-package kr.or.forcewave.safety.dao;
-
-public interface SafetyDAO {
-	
-	public List<SafetyVO>
-}
