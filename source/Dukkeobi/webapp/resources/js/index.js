@@ -1,15 +1,20 @@
 /* ===================main=================== */
 const context = $("#context").val();
 const url = "http://localhost:8888/geoserver/wms";
-let vworldKey = "783D66F2-A36F-3995-B0D6-35F1429C1BFE";
+const lifeSafetyKey = "LPGGTEYH-LPGG-LPGG-LPGG-LPGGTEYH1M";
+const vworldKey = "783D66F2-A36F-3995-B0D6-35F1429C1BFE";
 
-//좌표계 설정
+// 좌표계 설정
 proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
 ol.proj.proj4.register(proj4);
 
+// 배경지도 설정
+// ## 타일을 그때 그때 요청해서 불러오는 형식이라 처음 해당 url로 만들어지더라도 요청이 없고 활성화된 지도에서만 요청이 생긴다.
+// ## 지도에서 이동하면 또 그때 새로운 타일을 요청하여 불러온다.
+// ## 이동한 부분만 타일로 요청하여 불러오게 된다. 
 let bgLayer = [
 	new ol.layer.Tile({
-		name: 'base',
+		name: 'base', // ## 안의 레이어를 구분하기 위한 id값으로 설정했다.
 		source: new ol.source.XYZ({
 			url: "http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/Base/{z}/{y}/{x}.png"
 		})
@@ -58,14 +63,18 @@ const map = new ol.Map({
 });
 
 // 위성지도 전환
+// ## 그냥 layer 객체 배열인 bgLayer 안에 있는 layer들을 건드렸는데 어찌하여 map이 바뀐 건가?.....
+// ## 참조형
 $("[name=theme]").on("change", function() {
 	let themeName = $(this).val();
-	bgLayer.filter(layer => layer.get("name") === themeName).forEach(layer => layer.setVisible(true));
-	bgLayer.filter(layer => layer.get("name") !== themeName).forEach(layer => layer.setVisible(false));
+	bgLayer.forEach(layer => {if(layer.get("name") === themeName) {layer.setVisible(true)} else {layer.setVisible(false)}});
+//	bgLayer.filter(layer => layer.get("name") === themeName).forEach(layer => layer.setVisible(true));
+//	bgLayer.filter(layer => layer.get("name") !== themeName).forEach(layer => layer.setVisible(false));
+//	map.getLayers().getArray().filter(layer => layer.get("name") === themeName).forEach(layer => layer.setVisible(true));
+//	map.getLayers().getArray().filter(layer => layer.get("name") !== themeName).forEach(layer => layer.setVisible(false));
 });
 
-
-//변수
+// 제이쿼리 변수
 let veil = $("#veil");
 let menu = $("#menu");
 let search = $("#search");
@@ -73,10 +82,49 @@ let inquire = $("#inquire");
 let observe = $("#observe");
 let analyze = $("#analyze");
 let history = $("#history");
-let side = $("#side");
+let side = $("#side"); // 주거 현황 조회 메뉴의 사이드바
+
+////메인화면 -> 지도화면
+//veil.on("click", function(){
+//	if (veil.hasClass("veiled")) {
+//		veil.attr("class", "unveiled");
+//		menu.removeClass("bigMenu").addClass("smallMenu");
+//		search.attr("class", "smallMenuSearch");
+//		inquire.removeClass("bigMenuBtn").addClass("smallMenuBtn");
+//		observe.removeClass("bigMenuBtn").addClass("smallMenuBtn");
+//		analyze.removeClass("bigMenuBtn").addClass("smallMenuBtn");
+//		history.removeClass("bigMenuBtn").addClass("smallMenuBtn");
+//		side.css({"visibility":"visible", "width":"23%", "z-index":"99999"});
+//	}
+//}).trigger("click");
+////});
+//
+//$(".backBtn").on("click", function() {
+//	if (veil.hasClass("unveiled")) {
+//		veil.attr("class", "veiled");
+//		menu.addClass("bigMenu").removeClass("smallMenu");
+//		search.attr("class", "bigMenuSearch");
+//		inquire.removeClass("smallMenuBtn").addClass("bigMenuBtn");
+//		observe.removeClass("smallMenuBtn").addClass("bigMenuBtn");
+//		analyze.removeClass("smallMenuBtn").addClass("bigMenuBtn");
+//		history.removeClass("smallMenuBtn").addClass("bigMenuBtn");
+//		side.css({"visibility":"hidden", "width":"0%", "z-index":"1"});
+//	}	
+//});
 
 //메인화면 -> 지도화면
 veil.on("click", function(){
+	inOrOut();
+}).trigger("click");
+
+//지도화면 -> 메인화면
+$(".backBtn").on("click", function() {
+	inOrOut();
+});
+
+function inOrOut() {
+	// 함수 호출 시의 객체 상태가 필요해서 제이쿼리 객체로 잡기(아니면 document에서 새로 찾든가..)
+	let veil = $("#veil");
 	if (veil.hasClass("veiled")) {
 		veil.attr("class", "unveiled");
 		menu.removeClass("bigMenu").addClass("smallMenu");
@@ -85,13 +133,8 @@ veil.on("click", function(){
 		observe.removeClass("bigMenuBtn").addClass("smallMenuBtn");
 		analyze.removeClass("bigMenuBtn").addClass("smallMenuBtn");
 		history.removeClass("bigMenuBtn").addClass("smallMenuBtn");
-		side.css({"visibility":"visible", "width":"23%", "z-index":"99999"});
-	}
-}).trigger("click");
-//});
-
-$(".backBtn").on("click", function() {
-	if (veil.hasClass("unveiled")) {
+		side.css({"visibility":"visible", "width":"23%", "z-index":"99999"});		
+	} else if (veil.hasClass('unveiled')) {
 		veil.attr("class", "veiled");
 		menu.addClass("bigMenu").removeClass("smallMenu");
 		search.attr("class", "bigMenuSearch");
@@ -99,9 +142,9 @@ $(".backBtn").on("click", function() {
 		observe.removeClass("smallMenuBtn").addClass("bigMenuBtn");
 		analyze.removeClass("smallMenuBtn").addClass("bigMenuBtn");
 		history.removeClass("smallMenuBtn").addClass("bigMenuBtn");
-		side.css({"visibility":"hidden", "width":"0%", "z-index":"1"});
-	}	
-});
+		side.css({"visibility":"hidden", "width":"0%", "z-index":"1"});		
+	}
+}
 
 // 사이드 메뉴
 $(".sideHeader").on("click", function() {

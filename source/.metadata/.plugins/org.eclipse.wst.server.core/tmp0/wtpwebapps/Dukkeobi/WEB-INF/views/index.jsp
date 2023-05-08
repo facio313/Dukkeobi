@@ -21,10 +21,11 @@
 <input type="hidden" value="${context}" id="context">
 
 <!-- 지도 -->
-<div id="map"></div>
+<div id="map">
+	<!-- 배경장막 -->
+	<div id="veil" class="veiled"></div>
+</div>
 
-<!-- 배경장막 -->
-<div id="veil" class="veiled"></div>
 
 <!-- 대메뉴 -->
 <div id="menu" class="tile bigMenu">
