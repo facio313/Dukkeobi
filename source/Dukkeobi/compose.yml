@@ -1,0 +1,36 @@
+name: dukkeobi
+
+services:
+  dukkeobi:
+    image: ${DUKKEOBI_IMAGE:-ghcr.io/facio313/dukkeobi:latest}
+    container_name: dukkeobi
+    init: true
+    environment:
+      DUKKEOBI_DB_DRIVER: org.postgresql.Driver
+      DUKKEOBI_DB_URL: jdbc:postgresql://cksDB:5432/dukkeobi
+      DUKKEOBI_DB_USER: dukkeobi_app
+      DUKKEOBI_DB_PASSWORD: ${DUKKEOBI_DB_PASSWORD:?DUKKEOBI_DB_PASSWORD must be set}
+      DUKKEOBI_DATA_AVAILABLE: ${DUKKEOBI_DATA_AVAILABLE:-false}
+      DUKKEOBI_READ_ONLY: ${DUKKEOBI_READ_ONLY:-true}
+      DUKKEOBI_VWORLD_KEY: ${DUKKEOBI_VWORLD_KEY:-}
+    ports:
+      - "127.0.0.1:5178:8080"
+    networks:
+      - cksDB
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--show-error", "http://127.0.0.1:8080/dukkeobi/"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 60s
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+networks:
+  cksDB:
+    external: true
+    name: cksDB

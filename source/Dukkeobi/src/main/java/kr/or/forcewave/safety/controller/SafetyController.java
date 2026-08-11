@@ -41,8 +41,9 @@ public class SafetyController {
 	}
 	
 	@GetMapping("/form")
-	public String safetyForm() {
-		
+	public String safetyForm(Model model) {
+		String vworldKey = System.getenv("DUKKEOBI_VWORLD_KEY");
+		model.addAttribute("vworldKey", vworldKey == null ? "" : vworldKey);
 		return "safety/form";
 	}
 	

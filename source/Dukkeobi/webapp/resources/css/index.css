@@ -1,6 +1,24 @@
 body {
 	overflow: hidden;
 }
+#portfolioNotice {
+	position: fixed;
+	top: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 100000;
+	max-width: min(760px, calc(100vw - 2rem));
+	padding: 0.75rem 1rem;
+	border: 1px solid #f1c40f;
+	border-radius: 10px;
+	background: rgba(20, 24, 32, 0.94);
+	color: #fff;
+	text-align: center;
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+}
+#portfolioNotice strong {
+	display: block;
+}
 #map {
 	width: 100vw;
 	height: 100vh;
@@ -384,34 +402,34 @@ input[name="safety"] {
     border-radius: 100%;    
 }
 #totalIcon {
-    background-image: url('/resources/images/safetyTotal.svg');
+    background-image: url('../images/safetyTotal.svg');
     border: 0px solid rgba(245, 245, 245, 1);
 }
 #publicIcon {
-    background-image: url('/resources/images/public.svg');
+    background-image: url('../images/public.svg');
     margin-bottom: 20px;
     border: 0px solid red;
 }
 #eduIcon {
-    background-image: url('/resources/images/edu.svg');
+    background-image: url('../images/edu.svg');
     margin-bottom: 20px;
     border: 0px solid orange;
 }
 #healthIcon {
-    background-image: url('/resources/images/health.svg');
+    background-image: url('../images/health.svg');
     margin-bottom: 20px;
     border: 0px solid yellow;
 }
 #conviIcon {
-    background-image: url('/resources/images/convi.svg');
+    background-image: url('../images/convi.svg');
     border: 0px solid green;
 }
 #safeIcon {
-    background-image: url('/resources/images/safe.svg');
+    background-image: url('../images/safe.svg');
     border: 0px solid blue;
 }
 #natureIcon {
-    background-image: url('/resources/images/nature.svg');
+    background-image: url('../images/nature.svg');
     border: 0px solid purple;
 }
 .iconText {
@@ -423,64 +441,64 @@ input[name="poi"] {
 	display: none;
 }
 #poiTotalIcon {
-    background-image: url('/resources/images/safetyTotal.svg');
+    background-image: url('../images/safetyTotal.svg');
     border: 0px solid rgba(245, 245, 245, 1);
 }
 #trafficIcon {
-    background-image: url('/resources/images/traffic.svg');
+    background-image: url('../images/traffic.svg');
     margin-bottom: 20px;
     border: 0px solid red;
 }
 #disasterIcon {
-    background-image: url('/resources/images/disaster.svg');
+    background-image: url('../images/disaster.svg');
     margin-bottom: 20px;
     border: 0px solid orange;
 }
 #policeIcon {
-    background-image: url('/resources/images/police.svg');
+    background-image: url('../images/police.svg');
     margin-bottom: 20px;
     border: 0px solid yellow;
 }
 #unhealthIcon {
-    background-image: url('/resources/images/unhealth.svg');
+    background-image: url('../images/unhealth.svg');
     border: 0px solid green;
 }
 #accidentIcon {
-    background-image: url('/resources/images/accident.svg');
+    background-image: url('../images/accident.svg');
     border: 0px solid blue;
 }
 input[name="re"] {
 	display: none;
 }
 #reTotalIcon {
-    background-image: url('/resources/images/safetyTotal.svg');
+    background-image: url('../images/safetyTotal.svg');
     border: 0px solid rgba(245, 245, 245, 1);
 }
 #ajIcon {
-    background-image: url('/resources/images/aj.svg');
+    background-image: url('../images/aj.svg');
     margin-bottom: 20px;
     border: 0px solid red;
 }
 #awIcon {
-    background-image: url('/resources/images/aw.svg');
+    background-image: url('../images/aw.svg');
     margin-bottom: 20px;
     border: 0px solid orange;
 }
 #ojIcon {
-    background-image: url('/resources/images/oj.svg');
+    background-image: url('../images/oj.svg');
     margin-bottom: 20px;
     border: 0px solid yellow;
 }
 #owIcon {
-    background-image: url('/resources/images/ow.svg');
+    background-image: url('../images/ow.svg');
     border: 0px solid green;
 }
 #yjIcon {
-    background-image: url('/resources/images/yj.svg');
+    background-image: url('../images/yj.svg');
     border: 0px solid blue;
 }
 #ywIcon {
-    background-image: url('/resources/images/yw.svg');
+    background-image: url('../images/yw.svg');
     border: 0px solid purple;
 }
 #cContainer {

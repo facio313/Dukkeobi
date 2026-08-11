@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +37,14 @@ public class ApiTest {
 	//@Test
 	public void test() {
        try {
+			String serviceKey = System.getenv("DUKKEOBI_SAFEMAP_KEY");
+			if (serviceKey == null || serviceKey.trim().isEmpty()) {
+				return;
+			}
             // API 호출 URL
-            String urlStr = "https://www.safemap.go.kr/openApiService/data/getCrmnlHspotFETotData.do?serviceKey=H007VLYZ-H007-H007-H007-H007VLYZRB&pageNo=1&numOfRows=10&type=JSON";
+            String urlStr = "https://www.safemap.go.kr/openApiService/data/getCrmnlHspotFETotData.do?serviceKey="
+				+ URLEncoder.encode(serviceKey, "UTF-8")
+				+ "&pageNo=1&numOfRows=10&type=JSON";
             
             URL url = new URL(urlStr);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();

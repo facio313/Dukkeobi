@@ -12,10 +12,10 @@
 	<util:properties id="dbInfo" location="classpath:kr/or/forcewave/db/dbInfo.properties" />
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 
-		p:driverClassName="#{dbInfo.driverClassName}"
-		p:url="#{dbInfo.url}"
-		p:username="#{dbInfo.user}"
-		p:password="#{dbInfo.password}"
+		p:driverClassName="#{systemEnvironment['DUKKEOBI_DB_DRIVER'] ?: dbInfo.driverClassName}"
+		p:url="#{systemEnvironment['DUKKEOBI_DB_URL'] ?: dbInfo.url}"
+		p:username="#{systemEnvironment['DUKKEOBI_DB_USER'] ?: dbInfo.user}"
+		p:password="#{systemEnvironment['DUKKEOBI_DB_PASSWORD'] ?: dbInfo.password}"
 		
 		p:initialSize="#{dbInfo.initialSize}"
 		p:maxTotal="#{dbInfo.maxTotal}"
@@ -43,4 +43,3 @@
 		factory-ref="sqlSessionFactory"
 	/>
 </beans>
-

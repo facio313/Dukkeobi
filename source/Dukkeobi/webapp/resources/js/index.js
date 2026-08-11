@@ -1,8 +1,9 @@
 /* ===================main=================== */
 const context = $("#context").val();
-const url = "http://localhost:8888/geoserver/wms";
-const lifeSafetyKey = "LPGGTEYH-LPGG-LPGG-LPGG-LPGGTEYH1M";
-const vworldKey = "783D66F2-A36F-3995-B0D6-35F1429C1BFE";
+const dataAvailable = $("#dataAvailable").val() === "true";
+const readOnlyMode = $("#readOnlyMode").val() !== "false";
+const vworldKey = $("#vworldKey").val() || "";
+const url = `${context}/geoserver/wms`;
 
 // 좌표계 설정
 proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
@@ -15,39 +16,32 @@ ol.proj.proj4.register(proj4);
 let bgLayer = [
 	new ol.layer.Tile({
 		name: 'base', // ## 안의 레이어를 구분하기 위한 id값으로 설정했다.
-		source: new ol.source.XYZ({
-			url: "http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/Base/{z}/{y}/{x}.png"
-		})
-	}),
-	new ol.layer.Tile({
-		name: 'white',
-		source: new ol.source.XYZ({
-			url: 'http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/white/{z}/{y}/{x}.png'
-		}),
-		visible: false
-	}),
-	new ol.layer.Tile({
-		name: 'midnight',
-		source: new ol.source.XYZ({
-			url: 'http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/midnight/{z}/{y}/{x}.png'
-		}),
-		visible: false
-	}),
-	new ol.layer.Tile({
-		name: 'hybrid',
-		source: new ol.source.XYZ({
-			url: 'http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/Hybrid/{z}/{y}/{x}.png'
-		}),
-		visible: false
-	}),
-	new ol.layer.Tile({
-		name: 'satellite',
-		source: new ol.source.XYZ({
-			url: 'http://api.vworld.kr/req/wmts/1.0.0/783D66F2-A36F-3995-B0D6-35F1429C1BFE/Satellite/{z}/{y}/{x}.jpeg'
-		}),
-		visible: false
-	}),
+		source: vworldKey
+			? new ol.source.XYZ({
+				url: `https://api.vworld.kr/req/wmts/1.0.0/${encodeURIComponent(vworldKey)}/Base/{z}/{y}/{x}.png`
+			})
+			: new ol.source.OSM()
+	})
 ];
+
+if (vworldKey) {
+	[
+		['white', 'white', 'png'],
+		['midnight', 'midnight', 'png'],
+		['hybrid', 'Hybrid', 'png'],
+		['satellite', 'Satellite', 'jpeg']
+	].forEach(function(theme) {
+		bgLayer.push(new ol.layer.Tile({
+			name: theme[0],
+			source: new ol.source.XYZ({
+				url: `https://api.vworld.kr/req/wmts/1.0.0/${encodeURIComponent(vworldKey)}/${theme[1]}/{z}/{y}/{x}.${theme[2]}`
+			}),
+			visible: false
+		}));
+	});
+} else {
+	$("#control label").not("#base").hide();
+}
 
 //지도
 const map = new ol.Map({
@@ -115,7 +109,15 @@ let side = $("#side"); // 주거 현황 조회 메뉴의 사이드바
 //메인화면 -> 지도화면
 veil.on("click", function(){
 	inOrOut();
-}).trigger("click");
+});
+
+if (dataAvailable) {
+	veil.trigger("click");
+} else {
+	$("button, #search, select, input[type=checkbox], input[type=radio], input[type=range]")
+		.prop("disabled", true)
+		.attr("title", "원본 공간 데이터가 없어 포트폴리오 모드에서 사용할 수 없습니다.");
+}
 
 //지도화면 -> 메인화면
 $(".backBtn").on("click", function() {
@@ -274,6 +276,9 @@ function searchEmd(url, adm_nm) {
 // x, y좌표로 주소 가져오기
 let juso
 function getAddr(x, y) {
+	if (!vworldKey) {
+		return;
+	}
 	$.ajax({
 		url : `${pToA}${x},${y}`,
 		dataType : "jsonp",
@@ -344,8 +349,11 @@ const info = new ol.Overlay({
 	element : document.querySelector("#info")
 });
 map.addOverlay(info);
-let pToA = "https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:3857&format=json&type=both&zipcode=true&simple=false&key=783D66F2-A36F-3995-B0D6-35F1429C1BFE&point=";
+let pToA = `https://api.vworld.kr/req/address?service=address&request=getAddress&version=2.0&crs=epsg:3857&format=json&type=both&zipcode=true&simple=false&key=${encodeURIComponent(vworldKey)}&point=`;
 map.on('singleclick', function(event) {
+	if (!dataAvailable) {
+		return;
+	}
 	let coordinate = event.coordinate;
 	let element = info.getElement();
 	info.setPosition(coordinate);
@@ -886,7 +894,9 @@ function addCTbody() {
 		});
 	});
 }
-addCTbody();
+if (dataAvailable) {
+	addCTbody();
+}
 
 // 조건 설정 창
 $("#condition").on("click", function() {
@@ -1302,4 +1312,3 @@ $("#reListBtn").on("click", function() {
 		list.css({"width":"0%", "padding":"0%", "visibility":"hidden"}).hide();
 	}
 });
-

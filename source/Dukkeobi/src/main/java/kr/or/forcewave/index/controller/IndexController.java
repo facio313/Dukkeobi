@@ -32,7 +32,9 @@ public class IndexController{
 		Model model
 		, @ModelAttribute("cond") CondVO cond
 	){
-		
+		model.addAttribute("dataAvailable", environmentFlag("DUKKEOBI_DATA_AVAILABLE", false));
+		model.addAttribute("readOnlyMode", environmentFlag("DUKKEOBI_READ_ONLY", true));
+		model.addAttribute("vworldKey", environmentValue("DUKKEOBI_VWORLD_KEY"));
 		return "index";
 	}
 	
@@ -42,6 +44,16 @@ public class IndexController{
 		@RequestParam("admNm") String admNm
 	) {
 		return service.retrieveXY(admNm);
+	}
+
+	private boolean environmentFlag(String name, boolean defaultValue) {
+		String value = System.getenv(name);
+		return value == null ? defaultValue : Boolean.parseBoolean(value);
+	}
+
+	private String environmentValue(String name) {
+		String value = System.getenv(name);
+		return value == null ? "" : value;
 	}
 	
 }

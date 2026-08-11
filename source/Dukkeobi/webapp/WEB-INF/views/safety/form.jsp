@@ -1,16 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>안전현황 등록</title>
+<c:set value="${pageContext.request.contextPath}" var="context"/>
 <link rel="stylesheet" href="${context}/resources/js/bootstrap-5.2.3-dist/css/bootstrap.min.css">
 <style>
 
 </style>
 </head>
 <body style="padding-top: 10%; padding-left: 5%; padding-right: 5%;">
+<input type="hidden" value="<c:out value='${vworldKey}'/>" id="vworldKey">
 <h1>안전현황 등록</h1>
 <div>
 	<button class="btn btn-light btn-sm" style="position: relative; left: 70%;">지도에서 등록</button>
@@ -99,6 +102,7 @@ let x = $("#x");
 let y = $("#y");
 let lon = $("#lon");
 let lat = $("#lat");
+let vworldKey = $("#vworldKey").val() || "";
 
 window.onload = function(){
 	document.getElementById("kakao").addEventListener("click", function(){
@@ -106,9 +110,13 @@ window.onload = function(){
 	        oncomplete: function(data) {
 	            let address = data.address;
 	            document.getElementById("kakao").value = address;
+	            if (!vworldKey) {
+	                alert("VWorld API 키가 설정되지 않았습니다.");
+	                return;
+	            }
 
 	            $.ajax({
-					url : "http://map.vworld.kr/search.do?apiKey=783D66F2-A36F-3995-B0D6-35F1429C1BFE&category=Juso&pageUnit=10&pageIndex=1&output=json&q=" + address,
+					url : "https://map.vworld.kr/search.do?apiKey=" + encodeURIComponent(vworldKey) + "&category=Juso&pageUnit=10&pageIndex=1&output=json&q=" + encodeURIComponent(address),
 					dataType: "jsonp",
 					success: function(resp) {
 						let inputAddr = resp.LIST[0];
