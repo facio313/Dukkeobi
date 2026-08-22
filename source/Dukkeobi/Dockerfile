@@ -48,3 +48,4 @@ COPY --chown=10001:10001 --from=build \
 USER 10001:10001
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/portfolio-auth-mode", "exec", "--"]
+CMD ["catalina.sh", "run"]
