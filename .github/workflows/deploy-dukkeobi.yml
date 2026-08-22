@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -11,7 +12,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: dukkeobi-production
+  group: dukkeobi-${{ github.ref_name }}
   cancel-in-progress: false
 
 env:
@@ -24,6 +25,25 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Verify branch authentication contract
+        id: auth
+        env:
+          PORTFOLIO_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -eu
+          scripts/test-portfolio-auth-mode.sh
+          mode=$(scripts/portfolio-auth-mode.sh print)
+          {
+            printf 'branch=%s\n' "$PORTFOLIO_BRANCH"
+            printf 'mode=%s\n' "$mode"
+            printf 'tags<<EOF\n'
+            printf '%s:%s\n' "$IMAGE_NAME" "$GITHUB_SHA"
+            if [ "$GITHUB_REF_NAME" = main ]; then
+              printf '%s:latest\n' "$IMAGE_NAME"
+            fi
+            printf 'EOF\n'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -38,17 +58,19 @@ jobs:
       - name: Build and push ARM64 image
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
         with:
-          context: source/Dukkeobi
+          context: .
           file: source/Dukkeobi/Dockerfile
           platforms: linux/arm64
           push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            PORTFOLIO_BRANCH=${{ steps.auth.outputs.branch }}
+            PORTFOLIO_AUTH_MODE=${{ steps.auth.outputs.mode }}
+          tags: ${{ steps.auth.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
+    if: github.ref_name == 'main'
     needs: build
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10

@@ -1,0 +1,10 @@
+**
+!scripts/
+!scripts/portfolio-auth-mode.sh
+!source/
+!source/Dukkeobi/
+!source/Dukkeobi/pom.xml
+!source/Dukkeobi/src/
+!source/Dukkeobi/src/**
+!source/Dukkeobi/webapp/
+!source/Dukkeobi/webapp/**

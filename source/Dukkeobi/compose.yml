@@ -3,9 +3,17 @@ name: dukkeobi
 services:
   dukkeobi:
     image: ${DUKKEOBI_IMAGE:-ghcr.io/facio313/dukkeobi:latest}
+    build:
+      context: ../..
+      dockerfile: source/Dukkeobi/Dockerfile
+      args:
+        PORTFOLIO_BRANCH: ${PORTFOLIO_BRANCH:?PORTFOLIO_BRANCH must be set}
+        PORTFOLIO_AUTH_MODE: ${PORTFOLIO_AUTH_MODE:?PORTFOLIO_AUTH_MODE must be set}
     container_name: dukkeobi
     init: true
     environment:
+      PORTFOLIO_BRANCH: ${PORTFOLIO_BRANCH:?PORTFOLIO_BRANCH must be set}
+      PORTFOLIO_AUTH_MODE: ${PORTFOLIO_AUTH_MODE:?PORTFOLIO_AUTH_MODE must be set}
       DUKKEOBI_DB_DRIVER: org.postgresql.Driver
       DUKKEOBI_DB_URL: jdbc:postgresql://cksDB:5432/dukkeobi
       DUKKEOBI_DB_USER: dukkeobi_app
