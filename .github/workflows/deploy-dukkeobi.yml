@@ -26,6 +26,9 @@ jobs:
       - name: Check out source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
+      - name: Verify Bonifacio return-link contract
+        run: sh scripts/test-bonifacio-return-link.sh
+
       - name: Verify branch authentication contract
         id: auth
         env:

@@ -23,12 +23,17 @@
 <input type="hidden" value="${readOnlyMode}" id="readOnlyMode">
 <input type="hidden" value="<c:out value='${vworldKey}'/>" id="vworldKey">
 
-<c:if test="${not dataAvailable}">
-	<div id="portfolioNotice" role="status">
-		<strong>보관된 포트폴리오 화면입니다.</strong>
-		원본 PostGIS·GeoServer 데이터가 없어 조회·분석·저장 기능은 비활성화되어 있습니다.
-	</div>
-</c:if>
+<header class="portfolio-header">
+	<a class="bonifacio-return-link" href="https://bonifacio.work/">← Bonifacio</a>
+</header>
+
+<main id="appCanvas">
+	<c:if test="${not dataAvailable}">
+		<div id="portfolioNotice" role="status">
+			<strong>보관된 포트폴리오 화면입니다.</strong>
+			원본 PostGIS·GeoServer 데이터가 없어 조회·분석·저장 기능은 비활성화되어 있습니다.
+		</div>
+	</c:if>
 
 <!-- 지도 -->
 <div id="map">
@@ -590,7 +595,7 @@
 	</div>
 </div>
 
-
+</main>
 
 <script src="${context}/resources/js/ol/ol.js"></script>
 <script src="${context}/resources/js/ol/jsts.min.js"></script>
