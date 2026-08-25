@@ -14,6 +14,8 @@ for file in \
   app/package.json \
   app/package-lock.json \
   app/index.html \
+  app/src/main.ts \
+  app/src/styles.css \
   app/public/THIRD_PARTY_NOTICES.txt
 do
   [ -f "$file" ] || fail "$file is required"
@@ -40,7 +42,24 @@ assert_contains 'window.DUKKEOBI_CONFIG = Object.freeze({' scripts/runtime-entry
 assert_contains '*[!A-Za-z0-9_-]*' scripts/runtime-entrypoint.sh
 assert_contains 'must contain 16 to 80 characters' scripts/runtime-entrypoint.sh
 assert_contains 'src="/dukkeobi/runtime-config.js"' app/index.html
+assert_contains 'id="sheet-toggle"' app/index.html
+assert_contains 'id="active-filters"' app/index.html
+assert_contains 'class="panel-intro-meta"' app/index.html
+assert_contains '"pretendard": "1.3.9"' app/package.json
+assert_contains '"node_modules/pretendard"' app/package-lock.json
+assert_contains 'import "pretendard/dist/web/variable/pretendardvariable.css";' app/src/main.ts
+assert_contains 'requiredElement<HTMLButtonElement>("#sheet-toggle")' app/src/main.ts
+assert_contains 'requiredElement<HTMLElement>("#active-filters")' app/src/main.ts
+assert_contains 'input.style.setProperty("--range-progress"' app/src/main.ts
+assert_contains '@media (min-width: 600px) and (max-width: 1199px)' app/src/styles.css
+assert_contains '@media (min-width: 600px) and (max-width: 899px)' app/src/styles.css
+assert_contains '@media (min-width: 900px) and (max-width: 1199px)' app/src/styles.css
+assert_contains '@media (max-width: 599px)' app/src/styles.css
+assert_contains '.control-panel[data-sheet-state="open"]' app/src/styles.css
+assert_contains '.active-filters' app/src/styles.css
 assert_contains 'BSD 2-Clause License' app/public/THIRD_PARTY_NOTICES.txt
+assert_contains 'Pretendard 1.3.9 — SIL Open Font License 1.1' app/public/THIRD_PARTY_NOTICES.txt
+assert_contains 'SIL OPEN FONT LICENSE Version 1.1' app/public/THIRD_PARTY_NOTICES.txt
 
 if grep -Eq 'DUKKEOBI_DB_|cksDB|maven|tomcat|source/Dukkeobi' Dockerfile compose.yml; then
   fail 'the static runtime must not retain the legacy Java or database deployment'

@@ -7,7 +7,7 @@
       name="description"
       content="생활 인프라와 주거 비용을 함께 살펴보는 마포구 주거 후보지 분석 지도"
     >
-    <meta name="theme-color" content="#f5f2e8">
+    <meta name="theme-color" content="#f3f0e8">
     <title>두꺼비 — 살 곳을 읽는 지도</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='14' fill='%23c7f36b'/%3E%3Cpath d='M9.5 22.5C9.5 14.5 16 8 24 8s14.5 6.5 14.5 14.5v7.2c0 5.7-4.6 10.3-10.3 10.3h-8.4c-5.7 0-10.3-4.6-10.3-10.3z' fill='%2310261d'/%3E%3Ccircle cx='16' cy='15' r='2' fill='%23f5f2e8'/%3E%3Ccircle cx='32' cy='15' r='2' fill='%23f5f2e8'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="/src/styles.css">
@@ -30,7 +30,7 @@
           </span>
           <span class="brand-copy">
             <strong>두꺼비</strong>
-            <small>살 곳을 읽는 지도</small>
+            <small>생활반경 아틀라스</small>
           </span>
         </a>
 
@@ -60,14 +60,34 @@
 
       <main id="workspace" class="app-shell" tabindex="-1">
         <aside class="control-panel" aria-label="주거 후보 탐색 도구">
-          <div class="sheet-handle" aria-hidden="true"></div>
+          <button
+            id="sheet-toggle"
+            class="sheet-handle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="panel-scroll"
+          >
+            <span class="sheet-grip" aria-hidden="true"></span>
+            <span class="sheet-peek-copy">
+              <strong>내게 맞는 후보 8곳</strong>
+              <small>위로 밀어 조건과 순위를 살펴보세요</small>
+            </span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m7 14 5-5 5 5" />
+            </svg>
+          </button>
 
           <div class="panel-heading">
-            <p class="eyebrow">Mapo housing index</p>
-            <h1>내 생활의 반경을<br>다시 그려보세요.</h1>
+            <p class="eyebrow">Dukkeobi · Mapo living atlas</p>
+            <h1>내 하루가 좋아질<br>동네를 찾아보세요.</h1>
             <p>
-              가격만으로는 보이지 않는 교통, 생활, 건강과 안전을 한 지도에서 비교합니다.
+              가격 너머의 교통, 생활, 건강과 안전을 움직여 보며 나에게 맞는 생활반경을 찾습니다.
             </p>
+            <div class="panel-intro-meta" aria-label="분석 개요">
+              <span><b>8</b> 후보</span>
+              <span><b>5</b> 생활 기준</span>
+              <span><b>LIVE</b> 순위</span>
+            </div>
           </div>
 
           <nav class="panel-tabs" role="tablist" aria-label="분석 메뉴">
@@ -105,7 +125,7 @@
             </button>
           </nav>
 
-          <div class="panel-scroll">
+          <div id="panel-scroll" class="panel-scroll">
             <section
               id="explore-panel"
               class="tool-panel"
@@ -343,6 +363,8 @@
             <span id="mobile-provider-status">Kakao 확인 중</span>
           </div>
 
+          <div id="active-filters" class="active-filters" aria-label="현재 적용한 필터" aria-live="polite" hidden></div>
+
           <div class="map-toolbar" role="group" aria-label="지도 도구">
             <button id="locate-button" class="map-button" type="button">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -355,7 +377,7 @@
           </div>
 
           <div class="map-legend" role="group" aria-label="지도 점수 범례">
-            <span class="legend-title">종합 점수</span>
+            <span class="legend-title">나와의 적합도</span>
             <span class="legend-scale" aria-hidden="true"></span>
             <span>낮음</span><span>높음</span>
           </div>
@@ -364,10 +386,10 @@
             <section class="ranking-rail" aria-labelledby="ranking-title">
               <header>
                 <div>
-                  <p>Live ranking</p>
-                  <h2 id="ranking-title">지금의 Top 3</h2>
+                  <p>Live match</p>
+                  <h2 id="ranking-title">지금 나와 맞는 곳</h2>
                 </div>
-                <span class="rail-caption">기준을 움직이면 순위도 움직입니다</span>
+                <span class="rail-caption">기준을 움직여 순위의 변화를 느껴보세요</span>
               </header>
               <ol id="top-candidates" class="top-candidates" aria-live="polite">
                 <li class="rail-empty">분석 결과를 준비하고 있습니다.</li>
@@ -431,7 +453,7 @@
                 </div>
               </div>
               <div class="score-copy">
-                <span>나의 기준 종합 점수</span>
+                <span>이 생활반경과 나의 적합도</span>
                 <strong data-score-label>계산 중</strong>
                 <p>세부 점수와 원자료를 함께 확인하세요.</p>
               </div>

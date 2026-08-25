@@ -1,3 +1,4 @@
+import "pretendard/dist/web/variable/pretendardvariable.css";
 import "./styles.css";
 
 import { CANDIDATES, CANDIDATE_DATASET_METADATA, DEFAULT_SCORING_OPTIONS, DEFAULT_WEIGHTS } from "./data";
@@ -12,6 +13,31 @@ import { DukkeobiMap, type MappableCandidate } from "./map";
 import { filterCandidates, scoreCandidates } from "./scoring";
 import { readStored, writeStored } from "./storage";
 import { WEIGHT_KEYS, type CandidateFilters, type ScoredCandidate, type ScoringOptions, type WeightKey } from "./types";
+
+const COMPACT_LAYOUT_QUERY = "(max-width: 1199px)";
+const compactLayout = window.matchMedia(COMPACT_LAYOUT_QUERY);
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const SHEET_DRAG_THRESHOLD = 56;
+const SHEET_FLICK_VELOCITY = 0.42;
+
+type SheetState = "peek" | "open";
+
+interface InspectorReturnTarget {
+  action: string;
+  candidateId: string;
+  scopeId: string;
+  activePanel: string;
+  sheetState: SheetState;
+}
+
+interface SheetDragState {
+  pointerId: number;
+  startY: number;
+  lastY: number;
+  startedAt: number;
+  origin: SheetState;
+  moved: boolean;
+}
 
 const metricCopy: Record<WeightKey, { label: string; description: string }> = {
   transit: { label: "교통", description: "지하철·버스 접근성" },
@@ -98,6 +124,11 @@ function normalizeWeights(value: unknown): Record<WeightKey, number> {
 }
 
 const elements = {
+  controlPanel: requiredElement<HTMLElement>(".control-panel"),
+  sheetToggle: requiredElement<HTMLButtonElement>("#sheet-toggle"),
+  panelHeading: requiredElement<HTMLElement>(".panel-heading"),
+  panelTabs: requiredElement<HTMLElement>(".panel-tabs"),
+  panelScroll: requiredElement<HTMLElement>("#panel-scroll"),
   dataStatus: requiredElement<HTMLElement>("#data-status"),
   providerStatus: requiredElement<HTMLElement>("#provider-status"),
   mobileDataStatus: requiredElement<HTMLElement>("#mobile-data-status"),
@@ -115,6 +146,7 @@ const elements = {
   depositRateOutput: requiredElement<HTMLOutputElement>("#deposit-rate-output"),
   candidateCount: requiredElement<HTMLElement>("#candidate-count"),
   candidateList: requiredElement<HTMLOListElement>("#candidate-list"),
+  activeFilters: requiredElement<HTMLElement>("#active-filters"),
   analysisSummary: requiredElement<HTMLElement>("#analysis-summary"),
   topCandidates: requiredElement<HTMLOListElement>("#top-candidates"),
   savedList: requiredElement<HTMLUListElement>("#saved-list"),
@@ -185,15 +217,22 @@ function storedCandidateIds(key: string, limit = Number.POSITIVE_INFINITY): stri
 let favoriteIds = new Set(storedCandidateIds("favorites"));
 let comparisonIds = new Set(storedCandidateIds("comparison", 3));
 const liveSnapshots = new Map<string, LivePlaceSnapshot>();
+let previousRanks = new Map<string, number>();
+let rankDeltas = new Map<string, number>();
 let toastTimer = 0;
 let liveRequestGeneration = 0;
 let placeSearchGeneration = 0;
-let inspectorReturnTarget: { action: string; candidateId: string; scopeId: string } | null = null;
+let inspectorReturnTarget: InspectorReturnTarget | null = null;
+let sheetState: SheetState = "peek";
+let sheetDrag: SheetDragState | null = null;
+let suppressSheetClick = false;
+let flipFrame = 0;
+const flipAnimations = new Map<string, Animation>();
 
 const map = new DukkeobiMap(elements.map, (id, focusInspector = false) => {
   inspectorReturnTarget = null;
   selectCandidate(id, true, focusInspector);
-});
+}, previewCandidateInLists);
 
 function showToast(message: string, tone: "default" | "error" = "default"): void {
   window.clearTimeout(toastTimer);
@@ -215,6 +254,226 @@ function setProviderStatus(label: string, state: "ready" | "warning" | "loading"
   if (text) text.textContent = label;
   elements.mobileProviderStatus.dataset.state = state;
   elements.mobileProviderStatus.textContent = label.replace(/^(OpenStreetMap|OSM 지도) · /, "");
+}
+
+function activePanelName(): string {
+  return document.body.dataset.activePanel ?? "explore";
+}
+
+function syncMobileNavigation(target: string): void {
+  document.querySelectorAll<HTMLButtonElement>("[data-mobile-target]").forEach((button) => {
+    if (button.dataset.mobileTarget === target) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+}
+
+function updateSheetPeekCopy(): void {
+  const strong = elements.sheetToggle.querySelector<HTMLElement>(".sheet-peek-copy strong");
+  const small = elements.sheetToggle.querySelector<HTMLElement>(".sheet-peek-copy small");
+  const top = visibleCandidates[0];
+  if (strong) {
+    strong.textContent = top
+      ? `후보 ${visibleCandidates.length}곳 · 현재 1위 ${top.name}`
+      : "조건에 맞는 후보가 없어요";
+  }
+  if (small) small.textContent = sheetState === "open" ? "아래로 밀어 지도만 보기" : "위로 밀어 조건과 순위 살펴보기";
+}
+
+function setPanelContentInteractive(interactive: boolean): void {
+  [elements.panelHeading, elements.panelTabs, elements.panelScroll].forEach((element) => {
+    element.inert = !interactive;
+    if (interactive) element.removeAttribute("aria-hidden");
+    else element.setAttribute("aria-hidden", "true");
+  });
+}
+
+function setSheetState(nextState: SheetState, invalidateMap = true): void {
+  sheetState = nextState;
+  document.body.classList.toggle("mobile-panel-open", compactLayout.matches && nextState === "open");
+
+  if (!compactLayout.matches) {
+    delete elements.controlPanel.dataset.sheetState;
+    elements.sheetToggle.setAttribute("aria-expanded", "false");
+    elements.sheetToggle.setAttribute("aria-label", "탐색 도구");
+    setPanelContentInteractive(true);
+  } else {
+    elements.controlPanel.dataset.sheetState = nextState;
+    const open = nextState === "open";
+    elements.sheetToggle.setAttribute("aria-expanded", String(open));
+    elements.sheetToggle.setAttribute("aria-label", open ? "탐색 도구 접기" : "탐색 도구 펼치기");
+    setPanelContentInteractive(open);
+  }
+
+  updateSheetPeekCopy();
+  if (invalidateMap) window.setTimeout(() => map.invalidateSize(), 320);
+}
+
+function clearSheetDrag(): void {
+  if (sheetDrag && elements.sheetToggle.hasPointerCapture(sheetDrag.pointerId)) {
+    elements.sheetToggle.releasePointerCapture(sheetDrag.pointerId);
+  }
+  sheetDrag = null;
+  elements.controlPanel.style.removeProperty("--sheet-drag-offset");
+  document.body.classList.remove("is-sheet-dragging");
+}
+
+function handleResponsiveLayoutChange(): void {
+  clearSheetDrag();
+  document.body.classList.remove("mobile-panel-open", "mobile-inspector-open", "is-sheet-dragging");
+  syncMobileNavigation("map");
+  setSheetState("peek", false);
+  if (compactLayout.matches && selectedId) document.body.classList.add("mobile-inspector-open");
+  map.invalidateSize();
+}
+
+function previewCandidateInLists(id: string | null): void {
+  document
+    .querySelectorAll<HTMLElement>("#candidate-list > [data-candidate-id], #top-candidates > [data-candidate-id]")
+    .forEach((item) => item.classList.toggle("is-previewed", id !== null && item.dataset.candidateId === id));
+}
+
+function rankDeltaMarkup(candidate: ScoredCandidate): string {
+  const delta = rankDeltas.get(candidate.id) ?? 0;
+  if (delta === 0) return "";
+  const direction = delta > 0 ? "up" : "down";
+  const symbol = delta > 0 ? "▲" : "▼";
+  const label = `이전보다 ${Math.abs(delta)}계단 ${delta > 0 ? "상승" : "하락"}`;
+  return `<small class="rank-delta" data-direction="${direction}" aria-hidden="true" title="${label}">${symbol}${Math.abs(delta)}</small>`;
+}
+
+function rankAriaLabel(candidate: ScoredCandidate): string {
+  const delta = rankDeltas.get(candidate.id) ?? 0;
+  if (delta === 0) return `${candidate.rank}위`;
+  return `${candidate.rank}위, 이전보다 ${Math.abs(delta)}계단 ${delta > 0 ? "상승" : "하락"}`;
+}
+
+function updateRankDeltas(nextCandidates: readonly ScoredCandidate[]): void {
+  const nextRanks = new Map(nextCandidates.map((candidate) => [candidate.id, candidate.rank]));
+  rankDeltas = new Map();
+  nextCandidates.forEach((candidate) => {
+    const previous = previousRanks.get(candidate.id);
+    if (previous !== undefined && previous !== candidate.rank) rankDeltas.set(candidate.id, previous - candidate.rank);
+  });
+  previousRanks = nextRanks;
+}
+
+function captureFlipRects(): Map<string, DOMRect> {
+  const rects = new Map<string, DOMRect>();
+  document.querySelectorAll<HTMLElement>("[data-flip-key]").forEach((element) => {
+    const key = element.dataset.flipKey;
+    const rect = element.getBoundingClientRect();
+    if (key && rect.width > 0 && rect.height > 0) rects.set(key, rect);
+  });
+  return rects;
+}
+
+function cancelFlipAnimations(): void {
+  window.cancelAnimationFrame(flipFrame);
+  flipFrame = 0;
+  [...flipAnimations.values()].forEach((animation) => animation.cancel());
+  flipAnimations.clear();
+}
+
+function scheduleFlipAnimations(before: ReadonlyMap<string, DOMRect>): void {
+  window.cancelAnimationFrame(flipFrame);
+  if (reducedMotion.matches) {
+    cancelFlipAnimations();
+    return;
+  }
+  if (before.size === 0) return;
+  flipFrame = window.requestAnimationFrame(() => {
+    document.querySelectorAll<HTMLElement>("[data-flip-key]").forEach((element) => {
+      const key = element.dataset.flipKey;
+      const first = key ? before.get(key) : undefined;
+      if (!key || !first) return;
+      const last = element.getBoundingClientRect();
+      if (last.width === 0 || last.height === 0) return;
+      const deltaX = first.left - last.left;
+      const deltaY = first.top - last.top;
+      const scaleX = first.width / last.width;
+      const scaleY = first.height / last.height;
+      if (Math.abs(deltaX) < 0.5 && Math.abs(deltaY) < 0.5 && Math.abs(scaleX - 1) < 0.01 && Math.abs(scaleY - 1) < 0.01) return;
+
+      flipAnimations.get(key)?.cancel();
+      const animation = element.animate(
+        [
+          { transform: `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`, transformOrigin: "top left" },
+          { transform: "translate(0, 0) scale(1, 1)", transformOrigin: "top left" },
+        ],
+        { duration: 430, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      );
+      flipAnimations.set(key, animation);
+      animation.addEventListener("finish", () => {
+        if (flipAnimations.get(key) === animation) flipAnimations.delete(key);
+      }, { once: true });
+      animation.addEventListener("cancel", () => {
+        if (flipAnimations.get(key) === animation) flipAnimations.delete(key);
+      }, { once: true });
+    });
+  });
+}
+
+function syncRangeProgress(input: HTMLInputElement, valueText?: string): void {
+  const minimum = Number(input.min || 0);
+  const maximum = Number(input.max || 100);
+  const value = Number(input.value);
+  const progress = Number.isFinite(value) && maximum > minimum
+    ? Math.min(100, Math.max(0, ((value - minimum) / (maximum - minimum)) * 100))
+    : 0;
+  input.style.setProperty("--range-progress", `${progress}%`);
+  if (valueText) input.setAttribute("aria-valuetext", valueText);
+}
+
+function restartEntryMotion(element: HTMLElement, className: string): void {
+  element.classList.remove(className);
+  if (reducedMotion.matches) return;
+  window.requestAnimationFrame(() => {
+    element.classList.add(className);
+    window.setTimeout(() => element.classList.remove(className), 700);
+  });
+}
+
+function renderActiveFilters(): void {
+  const chips: Array<{ key: string; label: string }> = [];
+  const candidateSearch = elements.candidateSearch.value.trim();
+  if (candidateSearch) chips.push({ key: "search", label: `검색 · ${candidateSearch}` });
+  if (elements.districtFilter.value !== "all") chips.push({ key: "district", label: elements.districtFilter.value });
+  if (elements.leaseFilter.value !== "all") {
+    chips.push({ key: "lease", label: elements.leaseFilter.selectedOptions[0]?.textContent ?? "계약 유형" });
+  }
+  if (Number(elements.depositLimit.value) < Number(elements.depositLimit.max)) {
+    chips.push({ key: "deposit", label: `보증금 ≤ ${formatMoney(Number(elements.depositLimit.value))}` });
+  }
+  if (Number(elements.rentLimit.value) < Number(elements.rentLimit.max)) {
+    chips.push({ key: "rent", label: `월세 ≤ ${formatMoney(Number(elements.rentLimit.value))}` });
+  }
+
+  elements.activeFilters.hidden = chips.length === 0;
+  elements.activeFilters.innerHTML = chips
+    .map(
+      ({ key, label }) => `<button type="button" data-clear-filter="${key}" aria-label="${escapeMarkup(label)} 필터 해제"><span>${escapeMarkup(label)}</span><b aria-hidden="true">×</b></button>`,
+    )
+    .join("");
+}
+
+function clearSingleFilter(key: string): void {
+  if (key === "search") elements.candidateSearch.value = "";
+  if (key === "district") elements.districtFilter.value = "all";
+  if (key === "lease") elements.leaseFilter.value = "all";
+  if (key === "deposit") {
+    elements.depositLimit.value = elements.depositLimit.max;
+    elements.depositOutput.value = formatMoney(Number(elements.depositLimit.value));
+    syncRangeProgress(elements.depositLimit, elements.depositOutput.value);
+  }
+  if (key === "rent") {
+    elements.rentLimit.value = elements.rentLimit.max;
+    elements.rentOutput.value = formatMoney(Number(elements.rentLimit.value));
+    syncRangeProgress(elements.rentLimit, elements.rentOutput.value);
+  }
+  renderFilteredResults(true);
+  window.requestAnimationFrame(() => {
+    (elements.activeFilters.querySelector<HTMLButtonElement>("[data-clear-filter]") ?? elements.map).focus({ preventScroll: true });
+  });
 }
 
 function getFilters(): CandidateFilters {
@@ -245,9 +504,9 @@ function candidateCard(candidate: ScoredCandidate, compact = false): string {
   const saved = favoriteIds.has(candidate.id);
   const compared = comparisonIds.has(candidate.id);
   return `
-    <li class="candidate-card${selectedId === candidate.id ? " is-active" : ""}${compact ? " is-compact" : ""}" data-candidate-id="${escapeMarkup(candidate.id)}">
+    <li class="candidate-card${selectedId === candidate.id ? " is-active" : ""}${compact ? " is-compact" : ""}" data-candidate-id="${escapeMarkup(candidate.id)}" data-flip-key="candidate:${escapeMarkup(candidate.id)}">
       <button class="candidate-select" type="button" data-action="select" data-candidate-id="${escapeMarkup(candidate.id)}" aria-label="${escapeMarkup(candidate.name)} 상세 보기" aria-current="${selectedId === candidate.id ? "true" : "false"}">
-        <span class="candidate-rank">${String(candidate.rank).padStart(2, "0")}</span>
+        <span class="candidate-rank" aria-label="${rankAriaLabel(candidate)}"><b>${String(candidate.rank).padStart(2, "0")}</b>${rankDeltaMarkup(candidate)}</span>
         <span class="candidate-card-copy">
           <strong>${escapeMarkup(candidate.name)}</strong>
           <small>${escapeMarkup(candidate.dong)} · ${escapeMarkup(formatContract(candidate))}</small>
@@ -270,6 +529,8 @@ function renderCandidates(fitMap = false): void {
   const ids = new Set(filtered.map((candidate) => candidate.id));
   visibleCandidates = scoredCandidates.filter((candidate) => ids.has(candidate.id));
   elements.candidateCount.textContent = `${visibleCandidates.length}개`;
+  renderActiveFilters();
+  updateSheetPeekCopy();
   elements.candidateList.setAttribute("aria-busy", "false");
   elements.candidateList.innerHTML = visibleCandidates.length
     ? visibleCandidates.map((candidate) => candidateCard(candidate)).join("")
@@ -285,6 +546,7 @@ function renderCandidates(fitMap = false): void {
       liveRequestGeneration += 1;
       selectedId = null;
       map.showLivePlaces([]);
+      document.body.classList.remove("mobile-inspector-open");
       renderInspector();
     }
   }
@@ -296,9 +558,9 @@ function renderTopCandidates(): void {
     ? top
         .map(
           (candidate) => `
-            <li>
+            <li data-candidate-id="${escapeMarkup(candidate.id)}" data-flip-key="top:${escapeMarkup(candidate.id)}">
               <button type="button" data-action="select" data-candidate-id="${escapeMarkup(candidate.id)}">
-                <span class="rail-rank">${candidate.rank}</span>
+                <span class="rail-rank" aria-label="${rankAriaLabel(candidate)}"><b>${candidate.rank}</b>${rankDeltaMarkup(candidate)}</span>
                 <span><strong>${escapeMarkup(candidate.name)}</strong><small>${escapeMarkup(candidate.dong)} · ${escapeMarkup(formatContract(candidate))}</small></span>
                 <b>${Math.round(candidate.score)}</b>
               </button>
@@ -324,7 +586,7 @@ function renderSaved(): void {
     ? saved
         .map(
           (candidate) => `
-            <li class="saved-card">
+            <li class="saved-card" data-candidate-id="${escapeMarkup(candidate.id)}" data-flip-key="saved:${escapeMarkup(candidate.id)}">
               <button type="button" data-action="select" data-candidate-id="${escapeMarkup(candidate.id)}">
                 <span><strong>${escapeMarkup(candidate.name)}</strong><small>${escapeMarkup(formatContract(candidate))}</small></span><b>${Math.round(candidate.score)}</b>
               </button>
@@ -338,6 +600,11 @@ function renderSaved(): void {
 function renderComparison(): void {
   const compared = scoredCandidates.filter((candidate) => comparisonIds.has(candidate.id));
   elements.compareTray.hidden = compared.length === 0;
+  elements.compareTray.dataset.count = String(compared.length);
+  elements.openComparison.setAttribute(
+    "aria-label",
+    compared.length < 2 ? `비교할 후보 ${compared.length}곳, 두 곳 이상 필요` : `후보 ${compared.length}곳 한눈에 비교`,
+  );
   elements.compareList.innerHTML = compared
     .map(
       (candidate) => `<li><button type="button" data-action="select" data-candidate-id="${escapeMarkup(candidate.id)}">${escapeMarkup(candidate.name)}</button><button type="button" data-action="compare" data-candidate-id="${escapeMarkup(candidate.id)}" aria-label="${escapeMarkup(candidate.name)} 비교에서 제거">×</button></li>`,
@@ -378,7 +645,7 @@ function metricMarkup(candidate: ScoredCandidate): string {
     return `
       <div class="metric-row">
         <dt><strong>${metricCopy[key].label}</strong><small>${metricCopy[key].description}</small></dt>
-        <dd><span class="metric-track"><i style="width:${score}%"></i></span><b>${Math.round(score)}</b></dd>
+        <dd><span class="metric-track"><i class="metric-fill is-entering" style="width:${score}%;--metric-value:${score}"></i></span><b>${Math.round(score)}</b></dd>
       </div>`;
   }).join("");
 }
@@ -421,6 +688,8 @@ function renderInspector(): void {
   elements.inspectorAddress.textContent = `${candidate.address} · ${formatContract(candidate)}`;
   elements.scoreValue.textContent = String(Math.round(candidate.score));
   elements.scoreRing.style.setProperty("--score", String(candidate.score));
+  elements.scoreRing.dataset.score = String(Math.round(candidate.score));
+  restartEntryMotion(elements.scoreRing, "is-score-updating");
   elements.scoreLabel.textContent = scoreLabel(candidate.score);
   elements.favoriteButton.setAttribute("aria-pressed", String(favoriteIds.has(candidate.id)));
   elements.favoriteButton.setAttribute("aria-label", favoriteIds.has(candidate.id) ? "후보 저장 취소" : "후보 저장");
@@ -446,13 +715,29 @@ function renderInspector(): void {
 }
 
 function recalculate(options: { fitMap?: boolean } = {}): void {
-  scoredCandidates = scoreCandidates(CANDIDATES, weights, scoringOptions);
+  const before = captureFlipRects();
+  elements.candidateList.setAttribute("aria-busy", "true");
+  elements.topCandidates.setAttribute("aria-busy", "true");
+  const nextCandidates = scoreCandidates(CANDIDATES, weights, scoringOptions);
+  updateRankDeltas(nextCandidates);
+  scoredCandidates = nextCandidates;
   renderCandidates(options.fitMap);
   renderTopCandidates();
   renderAnalysisSummary();
   renderSaved();
   renderComparison();
   renderInspector();
+  elements.candidateList.setAttribute("aria-busy", "false");
+  elements.topCandidates.setAttribute("aria-busy", "false");
+  scheduleFlipAnimations(before);
+}
+
+function renderFilteredResults(fitMap = false): void {
+  const before = captureFlipRects();
+  renderCandidates(fitMap);
+  renderTopCandidates();
+  renderAnalysisSummary();
+  scheduleFlipAnimations(before);
 }
 
 function clearFiltersToReveal(candidateId: string): boolean {
@@ -464,6 +749,8 @@ function clearFiltersToReveal(candidateId: string): boolean {
   elements.rentLimit.value = elements.rentLimit.max;
   elements.depositOutput.value = formatMoney(Number(elements.depositLimit.value));
   elements.rentOutput.value = formatMoney(Number(elements.rentLimit.value));
+  syncRangeProgress(elements.depositLimit, elements.depositOutput.value);
+  syncRangeProgress(elements.rentLimit, elements.rentOutput.value);
   return true;
 }
 
@@ -481,7 +768,11 @@ function selectCandidate(id: string, move = true, focusInspector = false): void 
   renderInspector();
   map.showLivePlaces(liveSnapshots.get(id)?.places ?? []);
   map.selectCandidate(toMappable(candidate), move);
-  if (window.matchMedia("(max-width: 767px)").matches) document.body.classList.add("mobile-inspector-open");
+  if (compactLayout.matches) {
+    syncMobileNavigation("map");
+    setSheetState("peek", false);
+    document.body.classList.add("mobile-inspector-open");
+  }
   if (focusInspector) requestAnimationFrame(() => elements.inspectorName.focus({ preventScroll: true }));
   if (filtersCleared) showToast("저장한 후보를 보여드리기 위해 탐색 필터를 초기화했습니다.");
 }
@@ -536,6 +827,10 @@ function activateTab(tab: string, focus = false): void {
     panel.hidden = panel.dataset.panel !== tab;
   });
   document.body.dataset.activePanel = tab;
+  if (compactLayout.matches) {
+    syncMobileNavigation(tab);
+    if (!document.body.classList.contains("mobile-inspector-open")) setSheetState("open", false);
+  }
 }
 
 async function runPlaceSearch(): Promise<void> {
@@ -599,12 +894,23 @@ function bindEvents(): void {
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
     const target = event.target;
+    const clearFilterButton = target.closest<HTMLButtonElement>("[data-clear-filter]");
+    if (clearFilterButton?.dataset.clearFilter) {
+      clearSingleFilter(clearFilterButton.dataset.clearFilter);
+      return;
+    }
     const actionButton = target.closest<HTMLButtonElement>("[data-action]");
     if (actionButton?.dataset.candidateId) {
       const { action, candidateId } = actionButton.dataset;
       const actionScope = actionButton.closest<HTMLElement>("#candidate-list, #saved-list, #top-candidates, #compare-list");
       if (action === "select") {
-        inspectorReturnTarget = { action, candidateId, scopeId: actionScope?.id ?? "" };
+        inspectorReturnTarget = {
+          action,
+          candidateId,
+          scopeId: actionScope?.id ?? "",
+          activePanel: activePanelName(),
+          sheetState,
+        };
         selectCandidate(candidateId, true, true);
       }
       if (action === "favorite") {
@@ -619,6 +925,33 @@ function bindEvents(): void {
     }
     const tabButton = target.closest<HTMLButtonElement>("[data-tab]");
     if (tabButton?.dataset.tab) activateTab(tabButton.dataset.tab);
+  });
+
+  const previewCandidateFromEvent = (eventTarget: EventTarget | null): string | null => {
+    if (!(eventTarget instanceof Element)) return null;
+    const control = eventTarget.closest<HTMLElement>("[data-candidate-id]");
+    if (!control?.dataset.candidateId) return null;
+    if (!control.closest("#candidate-list, #top-candidates")) return null;
+    return control.dataset.candidateId;
+  };
+  document.addEventListener("pointerover", (event) => {
+    const id = previewCandidateFromEvent(event.target);
+    const previousId = previewCandidateFromEvent(event.relatedTarget);
+    if (id && id !== previousId) map.previewCandidate(id);
+  });
+  document.addEventListener("pointerout", (event) => {
+    const id = previewCandidateFromEvent(event.target);
+    const nextId = previewCandidateFromEvent(event.relatedTarget);
+    if (id && id !== nextId) map.previewCandidate(nextId);
+  });
+  document.addEventListener("focusin", (event) => {
+    const id = previewCandidateFromEvent(event.target);
+    if (id) map.previewCandidate(id);
+  });
+  document.addEventListener("focusout", (event) => {
+    const id = previewCandidateFromEvent(event.target);
+    const nextId = previewCandidateFromEvent(event.relatedTarget);
+    if (id && id !== nextId) map.previewCandidate(nextId);
   });
 
   document.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((button, index, buttons) => {
@@ -640,24 +973,20 @@ function bindEvents(): void {
     void runPlaceSearch();
   });
   elements.candidateSearch.addEventListener("input", () => {
-    renderCandidates(false);
-    renderTopCandidates();
-    renderAnalysisSummary();
+    renderFilteredResults(false);
   });
   [elements.districtFilter, elements.leaseFilter].forEach((control) => {
     control.addEventListener("change", () => {
-      renderCandidates(true);
-      renderTopCandidates();
-      renderAnalysisSummary();
+      renderFilteredResults(true);
     });
   });
   [elements.depositLimit, elements.rentLimit].forEach((control) => {
     control.addEventListener("input", () => {
       elements.depositOutput.value = formatMoney(Number(elements.depositLimit.value));
       elements.rentOutput.value = formatMoney(Number(elements.rentLimit.value));
-      renderCandidates(false);
-      renderTopCandidates();
-      renderAnalysisSummary();
+      syncRangeProgress(elements.depositLimit, elements.depositOutput.value);
+      syncRangeProgress(elements.rentLimit, elements.rentOutput.value);
+      renderFilteredResults(false);
     });
     control.addEventListener("change", () => map.fitCandidates(visibleCandidates.map(toMappable)));
   });
@@ -666,15 +995,18 @@ function bindEvents(): void {
     const key = input.dataset.weight as WeightKey;
     input.value = String(weights[key]);
     requiredElement<HTMLOutputElement>(`[data-weight-output="${key}"]`).value = String(weights[key]);
+    syncRangeProgress(input, `${weights[key]}점`);
     input.addEventListener("input", () => {
       weights = { ...weights, [key]: Number(input.value) };
       requiredElement<HTMLOutputElement>(`[data-weight-output="${key}"]`).value = input.value;
+      syncRangeProgress(input, `${input.value}점`);
       if (WEIGHT_KEYS.every((weightKey) => weights[weightKey] === 0)) {
         weights = { ...DEFAULT_WEIGHTS };
         document.querySelectorAll<HTMLInputElement>("[data-weight]").forEach((weightInput) => {
           const weightKey = weightInput.dataset.weight as WeightKey;
           weightInput.value = String(weights[weightKey]);
           requiredElement<HTMLOutputElement>(`[data-weight-output="${weightKey}"]`).value = String(weights[weightKey]);
+          syncRangeProgress(weightInput, `${weights[weightKey]}점`);
         });
         showToast("모든 기준을 0으로 둘 수 없어 같은 비율로 되돌렸습니다.");
       }
@@ -684,9 +1016,11 @@ function bindEvents(): void {
   });
   elements.depositRate.value = String(scoringOptions.depositAnnualRatePercent);
   elements.depositRateOutput.value = `${scoringOptions.depositAnnualRatePercent.toFixed(1)}%`;
+  syncRangeProgress(elements.depositRate, elements.depositRateOutput.value);
   elements.depositRate.addEventListener("input", () => {
     scoringOptions = { depositAnnualRatePercent: normalizeDepositRate(elements.depositRate.value) };
     elements.depositRateOutput.value = `${scoringOptions.depositAnnualRatePercent.toFixed(1)}%`;
+    syncRangeProgress(elements.depositRate, elements.depositRateOutput.value);
     writeStored("depositAnnualRatePercent", scoringOptions.depositAnnualRatePercent);
     recalculate();
   });
@@ -695,10 +1029,12 @@ function bindEvents(): void {
     scoringOptions = { ...DEFAULT_SCORING_OPTIONS };
     elements.depositRate.value = String(scoringOptions.depositAnnualRatePercent);
     elements.depositRateOutput.value = `${scoringOptions.depositAnnualRatePercent.toFixed(1)}%`;
+    syncRangeProgress(elements.depositRate, elements.depositRateOutput.value);
     document.querySelectorAll<HTMLInputElement>("[data-weight]").forEach((input) => {
       const key = input.dataset.weight as WeightKey;
       input.value = String(weights[key]);
       requiredElement<HTMLOutputElement>(`[data-weight-output="${key}"]`).value = String(weights[key]);
+      syncRangeProgress(input, `${weights[key]}점`);
     });
     writeStored("weights", weights);
     writeStored("depositAnnualRatePercent", scoringOptions.depositAnnualRatePercent);
@@ -715,9 +1051,20 @@ function bindEvents(): void {
     liveRequestGeneration += 1;
     selectedId = null;
     map.showLivePlaces([]);
+    map.selectCandidate(null, false);
+    map.previewCandidate(null);
     document.body.classList.remove("mobile-inspector-open");
     renderCandidates(false);
     renderInspector();
+    if (compactLayout.matches) {
+      if (returnTarget?.sheetState === "open") {
+        activateTab(returnTarget.activePanel);
+        setSheetState("open", false);
+      } else {
+        syncMobileNavigation("map");
+        setSheetState("peek", false);
+      }
+    }
     inspectorReturnTarget = null;
     requestAnimationFrame(() => {
       const returnScope = returnTarget?.scopeId ? document.getElementById(returnTarget.scopeId) : null;
@@ -757,24 +1104,85 @@ function bindEvents(): void {
     });
   });
 
+  elements.sheetToggle.style.touchAction = "none";
+  elements.sheetToggle.addEventListener("click", () => {
+    if (!compactLayout.matches) return;
+    if (suppressSheetClick) {
+      suppressSheetClick = false;
+      return;
+    }
+    const nextState = sheetState === "open" ? "peek" : "open";
+    syncMobileNavigation(nextState === "open" ? activePanelName() : "map");
+    setSheetState(nextState);
+  });
+  elements.sheetToggle.addEventListener("pointerdown", (event) => {
+    if (!compactLayout.matches || event.button !== 0 || !event.isPrimary) return;
+    clearSheetDrag();
+    sheetDrag = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      lastY: event.clientY,
+      startedAt: performance.now(),
+      origin: sheetState,
+      moved: false,
+    };
+    elements.sheetToggle.setPointerCapture(event.pointerId);
+    document.body.classList.add("is-sheet-dragging");
+  });
+  elements.sheetToggle.addEventListener("pointermove", (event) => {
+    if (!sheetDrag || sheetDrag.pointerId !== event.pointerId) return;
+    const deltaY = event.clientY - sheetDrag.startY;
+    sheetDrag.lastY = event.clientY;
+    sheetDrag.moved ||= Math.abs(deltaY) > 7;
+    const limitedDelta = sheetDrag.origin === "open"
+      ? Math.min(190, Math.max(-24, deltaY))
+      : Math.min(72, Math.max(-190, deltaY));
+    elements.controlPanel.style.setProperty("--sheet-drag-offset", `${limitedDelta}px`);
+    event.preventDefault();
+  });
+  const finishSheetDrag = (event: PointerEvent, cancelled = false): void => {
+    if (!sheetDrag || sheetDrag.pointerId !== event.pointerId) return;
+    const drag = sheetDrag;
+    const deltaY = drag.lastY - drag.startY;
+    const elapsed = Math.max(1, performance.now() - drag.startedAt);
+    const velocity = deltaY / elapsed;
+    let nextState = drag.origin;
+    if (!cancelled && !drag.moved) {
+      clearSheetDrag();
+      return;
+    }
+    if (!cancelled) {
+      if (drag.origin === "peek" && (deltaY < -SHEET_DRAG_THRESHOLD || velocity < -SHEET_FLICK_VELOCITY)) nextState = "open";
+      if (drag.origin === "open" && (deltaY > SHEET_DRAG_THRESHOLD || velocity > SHEET_FLICK_VELOCITY)) nextState = "peek";
+    }
+    suppressSheetClick = drag.moved;
+    if (drag.moved) window.setTimeout(() => { suppressSheetClick = false; }, 0);
+    clearSheetDrag();
+    syncMobileNavigation(nextState === "open" ? activePanelName() : "map");
+    setSheetState(nextState);
+  };
+  elements.sheetToggle.addEventListener("pointerup", (event) => finishSheetDrag(event));
+  elements.sheetToggle.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
+
   document.querySelectorAll<HTMLButtonElement>("[data-mobile-target]").forEach((button) => {
     button.addEventListener("click", () => {
       const target = button.dataset.mobileTarget ?? "map";
+      clearSheetDrag();
       liveRequestGeneration += 1;
       selectedId = null;
+      inspectorReturnTarget = null;
       map.showLivePlaces([]);
+      map.selectCandidate(null, false);
+      map.previewCandidate(null);
       renderCandidates(false);
       renderInspector();
-      document.querySelectorAll<HTMLButtonElement>("[data-mobile-target]").forEach((item) => {
-        if (item === button) item.setAttribute("aria-current", "page");
-        else item.removeAttribute("aria-current");
-      });
+      syncMobileNavigation(target);
+      document.body.classList.remove("mobile-inspector-open");
       if (target === "map") {
-        document.body.classList.remove("mobile-panel-open", "mobile-inspector-open");
+        setSheetState("peek", false);
       } else {
         activateTab(target);
-        document.body.classList.add("mobile-panel-open");
-        document.body.classList.remove("mobile-inspector-open");
+        setSheetState("open", false);
       }
       map.invalidateSize();
     });
@@ -785,11 +1193,33 @@ function bindEvents(): void {
     const typing = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement || active instanceof HTMLSelectElement;
     if (event.key === "/" && !typing) {
       event.preventDefault();
-      elements.placeSearch.focus();
+      if (compactLayout.matches) {
+        activateTab("explore");
+        setSheetState("open", false);
+        window.requestAnimationFrame(() => elements.placeSearch.focus());
+      } else elements.placeSearch.focus();
     }
     if (event.key === "?" && !typing && !elements.methodDialog.open) elements.methodDialog.showModal();
+    if (event.key === "Escape" && compactLayout.matches && !elements.comparisonDialog.open && !elements.methodDialog.open) {
+      if (document.body.classList.contains("mobile-inspector-open")) elements.closeInspector.click();
+      else if (sheetState === "open") {
+        syncMobileNavigation("map");
+        setSheetState("peek");
+        elements.sheetToggle.focus({ preventScroll: true });
+      }
+    }
   });
-  window.addEventListener("resize", () => map.invalidateSize(), { passive: true });
+  compactLayout.addEventListener("change", handleResponsiveLayoutChange);
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches) cancelFlipAnimations();
+  });
+  window.addEventListener("resize", () => {
+    if (sheetDrag) {
+      clearSheetDrag();
+      setSheetState(sheetState, false);
+    }
+    map.invalidateSize();
+  }, { passive: true });
 }
 
 async function initializeProviders(): Promise<void> {
@@ -823,7 +1253,11 @@ function initialize(): void {
   elements.depositLimit.value = String(depositCeiling);
   elements.depositOutput.value = formatMoney(Number(elements.depositLimit.value));
   elements.rentOutput.value = formatMoney(Number(elements.rentLimit.value));
+  syncRangeProgress(elements.depositLimit, elements.depositOutput.value);
+  syncRangeProgress(elements.rentLimit, elements.rentOutput.value);
   bindEvents();
+  syncMobileNavigation("map");
+  setSheetState("peek", false);
   recalculate({ fitMap: true });
   void initializeProviders();
 }

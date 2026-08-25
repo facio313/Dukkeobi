@@ -61,6 +61,9 @@ grep -Eiq '^Location: */dukkeobi/' "$work_dir/root.headers" || fail 'root redire
 curl -fsS -D "$work_dir/app.headers" "$base/dukkeobi/deep/link" -o "$work_dir/app.html"
 grep -Fq '<title>두꺼비' "$work_dir/app.html" || fail 'deep link must fall back to the SPA'
 grep -Fq 'src="/dukkeobi/runtime-config.js"' "$work_dir/app.html" || fail 'deep links must load the canonical runtime config'
+grep -Fq 'id="sheet-toggle"' "$work_dir/app.html" || fail 'responsive sheet toggle must remain in the built app'
+grep -Fq 'id="active-filters"' "$work_dir/app.html" || fail 'active filter region must remain in the built app'
+grep -Fq 'class="panel-intro-meta"' "$work_dir/app.html" || fail 'analysis overview must remain in the built app'
 grep -Eiq '^Content-Security-Policy:' "$work_dir/app.headers" || fail 'CSP header is required'
 grep -Eiq '^X-Content-Type-Options: *nosniff' "$work_dir/app.headers" || fail 'nosniff header is required'
 grep -Eiq '^X-Frame-Options: *DENY' "$work_dir/app.headers" || fail 'frame denial header is required'
@@ -71,11 +74,35 @@ grep -Fq 'dataMode: "snapshot"' "$work_dir/runtime.js" || fail 'empty-key runtim
 
 curl -fsS "$base/dukkeobi/THIRD_PARTY_NOTICES.txt" -o "$work_dir/notices.txt"
 grep -Fq 'Leaflet 1.9.4 — BSD 2-Clause License' "$work_dir/notices.txt" || fail 'Leaflet runtime notice is required'
+grep -Fq 'Pretendard 1.3.9 — SIL Open Font License 1.1' "$work_dir/notices.txt" || fail 'Pretendard runtime notice is required'
+grep -Fq 'SIL OPEN FONT LICENSE Version 1.1' "$work_dir/notices.txt" || fail 'Pretendard OFL text is required'
 
-asset=$(sed -n 's/.*href="\([^"?]*\/assets\/[^"?]*\.css\)".*/\1/p' "$work_dir/app.html" | head -n 1)
-[ -n "$asset" ] || fail 'fingerprinted CSS asset was not found'
-curl -fsS -D "$work_dir/asset.headers" "$base$asset" -o /dev/null
-grep -Eiq '^Cache-Control: *public, *max-age=31536000, *immutable' "$work_dir/asset.headers" || fail 'fingerprinted assets need immutable caching'
+css_asset=$(sed -n 's/.*href="\([^"?]*\/assets\/[^"?]*\.css\)".*/\1/p' "$work_dir/app.html" | head -n 1)
+[ -n "$css_asset" ] || fail 'fingerprinted CSS asset was not found'
+curl -fsS -D "$work_dir/css.headers" "$base$css_asset" -o "$work_dir/app.css"
+grep -Eiq '^Cache-Control: *public, *max-age=31536000, *immutable' "$work_dir/css.headers" || fail 'fingerprinted CSS needs immutable caching'
+grep -Fq 'Pretendard' "$work_dir/app.css" || fail 'Pretendard font faces must remain in the CSS bundle'
+grep -Fq '.sheet-handle' "$work_dir/app.css" || fail 'responsive sheet styles must remain in the CSS bundle'
+grep -Fq '.active-filters' "$work_dir/app.css" || fail 'active filter styles must remain in the CSS bundle'
+grep -Fq '.control-panel[data-sheet-state=open]' "$work_dir/app.css" || fail 'open sheet state must remain in the CSS bundle'
+grep -Fq '@media (max-width:599px)' "$work_dir/app.css" || fail 'phone breakpoint must remain in the CSS bundle'
+grep -Fq '@media (min-width:600px) and (max-width:899px)' "$work_dir/app.css" || fail 'tablet portrait breakpoint must remain in the CSS bundle'
+grep -Fq '@media (min-width:900px) and (max-width:1199px)' "$work_dir/app.css" || fail 'tablet landscape breakpoint must remain in the CSS bundle'
+
+font_asset=$(grep -Eo "/dukkeobi/assets/[^)\"']+\\.woff2" "$work_dir/app.css" | head -n 1)
+[ -n "$font_asset" ] || fail 'fingerprinted Pretendard WOFF2 asset was not found'
+curl -fsS -D "$work_dir/font.headers" "$base$font_asset" -o "$work_dir/font.woff2"
+[ -s "$work_dir/font.woff2" ] || fail 'Pretendard WOFF2 asset is empty'
+grep -Eiq '^Content-Type: *font/woff2' "$work_dir/font.headers" || fail 'Pretendard asset must use the WOFF2 content type'
+grep -Eiq '^Cache-Control: *public, *max-age=31536000, *immutable' "$work_dir/font.headers" || fail 'fingerprinted font needs immutable caching'
+
+js_asset=$(sed -n 's/.*src="\([^"?]*\/assets\/[^"?]*\.js\)".*/\1/p' "$work_dir/app.html" | head -n 1)
+[ -n "$js_asset" ] || fail 'fingerprinted JavaScript asset was not found'
+curl -fsS -D "$work_dir/js.headers" "$base$js_asset" -o "$work_dir/app.js"
+grep -Eiq '^Cache-Control: *public, *max-age=31536000, *immutable' "$work_dir/js.headers" || fail 'fingerprinted JavaScript needs immutable caching'
+grep -Fq '#sheet-toggle' "$work_dir/app.js" || fail 'sheet interaction hook must remain in the JavaScript bundle'
+grep -Fq '#active-filters' "$work_dir/app.js" || fail 'active filter hook must remain in the JavaScript bundle'
+grep -Fq -- '--range-progress' "$work_dir/app.js" || fail 'range feedback hook must remain in the JavaScript bundle'
 
 [ "$(docker exec "$container" id -u)" = 10001 ] || fail 'runtime must not run as root'
 [ "$(docker inspect --format '{{.HostConfig.Memory}}' "$container")" = 134217728 ] || fail '128 MiB hard memory limit is required'
