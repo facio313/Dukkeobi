@@ -1,2 +1,10 @@
-source/Dukkeobi/.env
-source/Dukkeobi/target/
+.env
+.env.*
+!.env.example
+
+app/coverage/
+app/dist/
+app/node_modules/
+
+*.log
+npm-debug.log*

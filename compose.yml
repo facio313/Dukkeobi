@@ -1,0 +1,43 @@
+name: dukkeobi
+
+services:
+  dukkeobi:
+    image: ${DUKKEOBI_IMAGE:-ghcr.io/facio313/dukkeobi:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORTFOLIO_BRANCH: ${PORTFOLIO_BRANCH:?PORTFOLIO_BRANCH must be set}
+        PORTFOLIO_AUTH_MODE: ${PORTFOLIO_AUTH_MODE:?PORTFOLIO_AUTH_MODE must be set}
+        PORTFOLIO_BUILD: ${PORTFOLIO_BUILD:-}
+    container_name: dukkeobi
+    init: true
+    environment:
+      PORTFOLIO_BRANCH: ${PORTFOLIO_BRANCH:?PORTFOLIO_BRANCH must be set}
+      PORTFOLIO_AUTH_MODE: ${PORTFOLIO_AUTH_MODE:?PORTFOLIO_AUTH_MODE must be set}
+      DUKKEOBI_KAKAO_JS_KEY: ${DUKKEOBI_KAKAO_JS_KEY:-}
+    ports:
+      - "127.0.0.1:5178:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+    mem_limit: 128m
+    mem_reservation: 32m
+    pids_limit: 64
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-T", "3", "-O", "/dev/null", "http://127.0.0.1:8080/dukkeobi/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+    restart: unless-stopped
+    stop_grace_period: 10s

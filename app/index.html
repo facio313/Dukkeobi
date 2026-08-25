@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta
+      name="description"
+      content="생활 인프라와 주거 비용을 함께 살펴보는 마포구 주거 후보지 분석 지도"
+    >
+    <meta name="theme-color" content="#f5f2e8">
+    <title>두꺼비 — 살 곳을 읽는 지도</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='14' fill='%23c7f36b'/%3E%3Cpath d='M9.5 22.5C9.5 14.5 16 8 24 8s14.5 6.5 14.5 14.5v7.2c0 5.7-4.6 10.3-10.3 10.3h-8.4c-5.7 0-10.3-4.6-10.3-10.3z' fill='%2310261d'/%3E%3Ccircle cx='16' cy='15' r='2' fill='%23f5f2e8'/%3E%3Ccircle cx='32' cy='15' r='2' fill='%23f5f2e8'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="/src/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">분석 화면으로 바로가기</a>
+
+    <div class="site-frame">
+      <header class="topbar">
+        <a class="brand" href="/dukkeobi/" aria-label="두꺼비 홈">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" focusable="false">
+              <path d="M9.5 22.5c0-8 6.5-14.5 14.5-14.5s14.5 6.5 14.5 14.5v7.2c0 5.7-4.6 10.3-10.3 10.3h-8.4c-5.7 0-10.3-4.6-10.3-10.3z" />
+              <circle cx="16" cy="15" r="5.5" />
+              <circle cx="32" cy="15" r="5.5" />
+              <circle class="brand-eye" cx="16" cy="15" r="1.8" />
+              <circle class="brand-eye" cx="32" cy="15" r="1.8" />
+              <path class="brand-mouth" d="M18 29.5c2 1.8 4 2.7 6 2.7s4-.9 6-2.7" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>두꺼비</strong>
+            <small>살 곳을 읽는 지도</small>
+          </span>
+        </a>
+
+        <div class="service-status" role="group" aria-label="서비스 상태">
+          <span id="data-status" class="status-chip" role="status" data-state="loading">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>데이터 확인 중</span>
+          </span>
+          <span id="provider-status" class="status-chip status-chip-muted" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>지도 공급자 확인 중</span>
+          </span>
+        </div>
+
+        <nav class="top-actions" aria-label="서비스 링크">
+          <button id="open-method" class="text-button" type="button" aria-haspopup="dialog">
+            분석 방법
+          </button>
+          <a class="bonifacio-return-link" href="https://bonifacio.work/">
+            <span>Bonifacio</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7 17 17 7M8 7h9v9" />
+            </svg>
+          </a>
+        </nav>
+      </header>
+
+      <main id="workspace" class="app-shell" tabindex="-1">
+        <aside class="control-panel" aria-label="주거 후보 탐색 도구">
+          <div class="sheet-handle" aria-hidden="true"></div>
+
+          <div class="panel-heading">
+            <p class="eyebrow">Mapo housing index</p>
+            <h1>내 생활의 반경을<br>다시 그려보세요.</h1>
+            <p>
+              가격만으로는 보이지 않는 교통, 생활, 건강과 안전을 한 지도에서 비교합니다.
+            </p>
+          </div>
+
+          <nav class="panel-tabs" role="tablist" aria-label="분석 메뉴">
+            <button
+              id="explore-tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="explore-panel"
+              data-tab="explore"
+            >
+              탐색
+            </button>
+            <button
+              id="analyze-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="analyze-panel"
+              data-tab="analyze"
+              tabindex="-1"
+            >
+              분석
+            </button>
+            <button
+              id="saved-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="saved-panel"
+              data-tab="saved"
+              tabindex="-1"
+            >
+              저장
+            </button>
+          </nav>
+
+          <div class="panel-scroll">
+            <section
+              id="explore-panel"
+              class="tool-panel"
+              role="tabpanel"
+              aria-labelledby="explore-tab"
+              data-panel="explore"
+            >
+              <form id="search-form" class="place-search" role="search">
+                <label for="place-search">주소, 동네 또는 단지 찾기</label>
+                <div class="search-control">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="10.8" cy="10.8" r="6.3" />
+                    <path d="m15.5 15.5 4 4" />
+                  </svg>
+                  <input
+                    id="place-search"
+                    name="query"
+                    type="search"
+                    inputmode="search"
+                    autocomplete="off"
+                    placeholder="예: 상암동, 공덕역"
+                  >
+                  <button type="submit" class="search-submit" aria-label="장소 검색">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="m9 6 6 6-6 6" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+
+              <div class="section-heading compact-heading">
+                <div>
+                  <p class="section-number">01</p>
+                  <h2>후보 좁히기</h2>
+                </div>
+                <span class="section-hint">지도와 함께 갱신</span>
+              </div>
+
+              <div class="field-stack">
+                <div class="field">
+                  <label for="candidate-search">후보 안에서 검색</label>
+                  <input
+                    id="candidate-search"
+                    type="search"
+                    autocomplete="off"
+                    placeholder="단지명 또는 주소"
+                  >
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="district-filter">동네</label>
+                    <select id="district-filter">
+                      <option value="all">마포구 전체</option>
+                      <option value="공덕동">공덕동</option>
+                      <option value="망원동">망원동</option>
+                      <option value="상암동">상암동</option>
+                      <option value="합정동">합정동</option>
+                      <option value="연남동">연남동</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="lease-filter">계약 유형</label>
+                    <select id="lease-filter">
+                      <option value="all">전체</option>
+                      <option value="jeonse">전세</option>
+                      <option value="monthly">월세</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="limit-field">
+                  <div class="field-label-row">
+                    <label for="deposit-limit">최대 보증금</label>
+                    <output id="deposit-limit-output" for="deposit-limit">6억원</output>
+                  </div>
+                  <input
+                    id="deposit-limit"
+                    type="range"
+                    min="0"
+                    max="60000"
+                    step="500"
+                    value="60000"
+                  >
+                  <div class="range-scale" aria-hidden="true"><span>0원</span><span>6억원</span></div>
+                </div>
+
+                <div class="limit-field">
+                  <div class="field-label-row">
+                    <label for="rent-limit">최대 월세</label>
+                    <output id="rent-limit-output" for="rent-limit">200만원</output>
+                  </div>
+                  <input id="rent-limit" type="range" min="0" max="200" step="5" value="200">
+                  <div class="range-scale" aria-hidden="true"><span>0원</span><span>200만원</span></div>
+                </div>
+              </div>
+
+              <div class="list-heading">
+                <h2>지도 안의 후보</h2>
+                <span id="candidate-count" aria-live="polite">불러오는 중</span>
+              </div>
+              <ol id="candidate-list" class="candidate-list" aria-live="polite" aria-busy="true">
+                <li class="candidate-skeleton" aria-hidden="true">
+                  <span class="skeleton skeleton-rank"></span>
+                  <span class="skeleton-copy">
+                    <span class="skeleton skeleton-line skeleton-line-wide"></span>
+                    <span class="skeleton skeleton-line"></span>
+                  </span>
+                </li>
+                <li class="candidate-skeleton" aria-hidden="true">
+                  <span class="skeleton skeleton-rank"></span>
+                  <span class="skeleton-copy">
+                    <span class="skeleton skeleton-line skeleton-line-wide"></span>
+                    <span class="skeleton skeleton-line"></span>
+                  </span>
+                </li>
+              </ol>
+            </section>
+
+            <section
+              id="analyze-panel"
+              class="tool-panel"
+              role="tabpanel"
+              aria-labelledby="analyze-tab"
+              data-panel="analyze"
+              hidden
+            >
+              <div class="section-heading">
+                <div>
+                  <p class="section-number">02</p>
+                  <h2>나의 기준 만들기</h2>
+                </div>
+                <button id="reset-weights" class="quiet-button" type="button">기본값</button>
+              </div>
+              <p class="panel-description">
+                중요도를 움직이면 모든 후보의 순위가 즉시 다시 계산됩니다. 입력값은 합계와 관계없이 비율로 환산됩니다.
+              </p>
+
+              <div class="weight-list">
+                <div class="weight-control">
+                  <div class="weight-label">
+                    <label for="weight-transit"><span>교통</span><small>역·정류장 접근성</small></label>
+                    <output for="weight-transit" data-weight-output="transit">20</output>
+                  </div>
+                  <input id="weight-transit" type="range" min="0" max="50" value="20" data-weight="transit">
+                </div>
+                <div class="weight-control">
+                  <div class="weight-label">
+                    <label for="weight-daily"><span>생활</span><small>장보기·편의·공원</small></label>
+                    <output for="weight-daily" data-weight-output="daily">20</output>
+                  </div>
+                  <input id="weight-daily" type="range" min="0" max="50" value="20" data-weight="daily">
+                </div>
+                <div class="weight-control">
+                  <div class="weight-label">
+                    <label for="weight-health"><span>건강</span><small>병원·약국 접근성</small></label>
+                    <output for="weight-health" data-weight-output="health">20</output>
+                  </div>
+                  <input id="weight-health" type="range" min="0" max="50" value="20" data-weight="health">
+                </div>
+                <div class="weight-control">
+                  <div class="weight-label">
+                    <label for="weight-safety"><span>안전</span><small>치안·사고 지표</small></label>
+                    <output for="weight-safety" data-weight-output="safety">20</output>
+                  </div>
+                  <input id="weight-safety" type="range" min="0" max="50" value="20" data-weight="safety">
+                </div>
+                <div class="weight-control">
+                  <div class="weight-label">
+                    <label for="weight-budget"><span>비용</span><small>예산 안의 주거비</small></label>
+                    <output for="weight-budget" data-weight-output="budget">20</output>
+                  </div>
+                  <input id="weight-budget" type="range" min="0" max="50" value="20" data-weight="budget">
+                </div>
+              </div>
+
+              <div class="weight-control deposit-rate-control">
+                <div class="weight-label">
+                  <label for="deposit-rate"><span>연 보증금 환산율</span><small>보증금을 월 비용으로 바꾸는 나의 가정</small></label>
+                  <output id="deposit-rate-output" for="deposit-rate">4.0%</output>
+                </div>
+                <input id="deposit-rate" type="range" min="0" max="12" step="0.5" value="4">
+                <p>월 환산비용 = 월세 + 보증금 × 연 환산율 ÷ 12</p>
+              </div>
+
+              <div id="analysis-summary" class="analysis-summary" aria-live="polite">
+                <p>기준을 조정해 나에게 맞는 순서를 찾아보세요.</p>
+              </div>
+
+              <p class="source-note">
+                2022년 고정 후보 8곳 안에서 비교한 상대 지표입니다. 실제 계약 전 최신 시세·원자료·현장 조건을 확인하세요.
+              </p>
+              <button id="open-method-mobile" class="method-inline-button" type="button" aria-haspopup="dialog">
+                데이터와 분석 방법 자세히 보기
+              </button>
+            </section>
+
+            <section
+              id="saved-panel"
+              class="tool-panel"
+              role="tabpanel"
+              aria-labelledby="saved-tab"
+              data-panel="saved"
+              hidden
+            >
+              <div class="section-heading">
+                <div>
+                  <p class="section-number">03</p>
+                  <h2>저장한 후보</h2>
+                </div>
+              </div>
+              <p class="panel-description">
+                마음에 둔 후보를 다시 지도에서 열거나 비교 목록에 담을 수 있습니다.
+              </p>
+              <ul id="saved-list" class="saved-list" aria-live="polite">
+                <li class="empty-state">
+                  <span class="empty-orbit" aria-hidden="true"></span>
+                  <strong>아직 저장한 후보가 없어요.</strong>
+                  <p>후보 상세에서 하트를 누르면 이곳에 모입니다.</p>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </aside>
+
+        <section class="map-stage" aria-labelledby="map-title">
+          <h2 id="map-title" class="visually-hidden">마포구 주거 후보 지도</h2>
+          <p id="map-help" class="visually-hidden">
+            화살표 키로 지도를 이동하고 더하기와 빼기 키로 확대하거나 축소할 수 있습니다.
+          </p>
+          <div id="map" tabindex="0" role="application" aria-describedby="map-help"></div>
+
+          <div class="mobile-map-status" aria-label="데이터와 지도 공급자 상태">
+            <span id="mobile-data-status">2022 스냅샷 · 8개 후보</span>
+            <span id="mobile-provider-status">Kakao 확인 중</span>
+          </div>
+
+          <div class="map-toolbar" role="group" aria-label="지도 도구">
+            <button id="locate-button" class="map-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="12" cy="12" r="8" />
+                <path d="M12 2v2M22 12h-2M12 22v-2M2 12h2" />
+              </svg>
+              <span>내 위치</span>
+            </button>
+          </div>
+
+          <div class="map-legend" role="group" aria-label="지도 점수 범례">
+            <span class="legend-title">종합 점수</span>
+            <span class="legend-scale" aria-hidden="true"></span>
+            <span>낮음</span><span>높음</span>
+          </div>
+
+          <div class="map-bottom-stack">
+            <section class="ranking-rail" aria-labelledby="ranking-title">
+              <header>
+                <div>
+                  <p>Live ranking</p>
+                  <h2 id="ranking-title">지금의 Top 3</h2>
+                </div>
+                <span class="rail-caption">기준을 움직이면 순위도 움직입니다</span>
+              </header>
+              <ol id="top-candidates" class="top-candidates" aria-live="polite">
+                <li class="rail-empty">분석 결과를 준비하고 있습니다.</li>
+              </ol>
+            </section>
+
+            <section id="compare-tray" class="compare-tray" aria-labelledby="compare-title" hidden>
+              <div class="compare-copy">
+                <p>Compare</p>
+                <h2 id="compare-title">비교할 후보</h2>
+              </div>
+              <ul id="compare-list" aria-live="polite"></ul>
+              <button id="open-comparison" class="primary-button" type="button" aria-haspopup="dialog">
+                한눈에 비교
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <aside id="inspector" class="inspector-panel" aria-label="선택한 후보 상세">
+          <div id="inspector-empty" class="inspector-empty">
+            <span class="empty-orbit" aria-hidden="true"></span>
+            <strong>지도에서 후보를 선택하세요.</strong>
+            <p>점수의 근거와 주변 생활 정보를 자세히 보여드릴게요.</p>
+          </div>
+
+          <div id="inspector-content" class="inspector-content" hidden>
+            <div class="inspector-actions">
+              <button id="close-inspector" class="icon-button" type="button" aria-label="상세 닫기">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 6l12 12M18 6 6 18" />
+                </svg>
+              </button>
+              <button
+                id="favorite-button"
+                class="icon-button favorite-button"
+                type="button"
+                aria-label="후보 저장"
+                aria-pressed="false"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20.8 8.7c0 5.6-8.8 10.5-8.8 10.5S3.2 14.3 3.2 8.7A4.7 4.7 0 0 1 12 6.4a4.7 4.7 0 0 1 8.8 2.3Z" />
+                </svg>
+              </button>
+            </div>
+
+            <header class="candidate-hero">
+              <p class="eyebrow">Selected place</p>
+              <h2 data-inspector-name tabindex="-1">선택한 후보</h2>
+              <p data-inspector-address>주소 정보를 불러오는 중입니다.</p>
+            </header>
+
+            <div class="score-overview">
+              <div id="score-ring" class="score-ring">
+                <div>
+                  <strong id="score-value">—</strong>
+                  <span>/ 100</span>
+                </div>
+              </div>
+              <div class="score-copy">
+                <span>나의 기준 종합 점수</span>
+                <strong data-score-label>계산 중</strong>
+                <p>세부 점수와 원자료를 함께 확인하세요.</p>
+              </div>
+            </div>
+
+            <section class="inspector-section" aria-labelledby="metrics-title">
+              <div class="inspector-section-heading">
+                <h3 id="metrics-title">기준별 점수</h3>
+                <span>마포 후보 내 상대값</span>
+              </div>
+              <dl id="metric-list" class="metric-list"></dl>
+            </section>
+
+            <section class="inspector-section" aria-labelledby="evidence-title">
+              <div class="inspector-section-heading">
+                <h3 id="evidence-title">이 점수의 근거</h3>
+                <span>거리·개수·가격</span>
+              </div>
+              <ul id="evidence-list" class="evidence-list"></ul>
+            </section>
+
+            <section id="live-places-section" class="inspector-section live-places-section" aria-labelledby="live-places-title" hidden>
+              <div class="inspector-section-heading">
+                <h3 id="live-places-title">Kakao 주변시설 표본</h3>
+                <time id="live-observed-at"></time>
+              </div>
+              <p class="live-places-note">가까운 표본을 최대 12곳 보여줍니다. 현재 점수에는 섞지 않습니다.</p>
+              <ul id="live-place-list" class="live-place-list"></ul>
+            </section>
+
+            <button id="live-poi-button" class="secondary-button" type="button">
+              <span id="live-poi-label">주변 생활시설 지도에서 보기</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m9 6 6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        </aside>
+      </main>
+
+      <nav class="mobile-nav" aria-label="모바일 메뉴">
+        <button type="button" data-mobile-target="map" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m4 6 5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14" />
+          </svg>
+          <span>지도</span>
+        </button>
+        <button type="button" data-mobile-target="explore">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.5" cy="10.5" r="6" />
+            <path d="m15 15 4.5 4.5" />
+          </svg>
+          <span>탐색</span>
+        </button>
+        <button type="button" data-mobile-target="analyze">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 19V9M12 19V4M19 19v-7" />
+          </svg>
+          <span>분석</span>
+        </button>
+        <button type="button" data-mobile-target="saved">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M18.5 9.2c0 4.6-6.5 8.5-6.5 8.5s-6.5-3.9-6.5-8.5A3.7 3.7 0 0 1 12 6.8a3.7 3.7 0 0 1 6.5 2.4Z" />
+          </svg>
+          <span>저장</span>
+        </button>
+      </nav>
+    </div>
+
+    <dialog id="comparison-dialog" class="app-dialog" aria-labelledby="comparison-dialog-title">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">Side by side</p>
+          <h2 id="comparison-dialog-title">후보 비교</h2>
+        </div>
+        <button id="close-comparison" class="icon-button" type="button" aria-label="비교 창 닫기">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+      <div id="comparison-content" class="comparison-content">
+        <div class="empty-state">
+          <span class="empty-orbit" aria-hidden="true"></span>
+          <strong>비교할 후보를 두 곳 이상 담아주세요.</strong>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="method-dialog" class="app-dialog method-dialog" aria-labelledby="method-dialog-title">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="method-dialog-title">점수를 읽는 방법</h2>
+        </div>
+        <button id="close-method" class="icon-button" type="button" aria-label="분석 방법 닫기">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+      <div class="method-grid">
+        <section>
+          <span>01</span>
+          <h3>같은 단위로 바꿉니다</h3>
+          <p>거리와 시설 수를 8개 고정 후보 안의 0–100 동점 보정 상대 점수로 바꿉니다.</p>
+        </section>
+        <section>
+          <span>02</span>
+          <h3>비용 가정을 직접 정합니다</h3>
+          <p>월세에 보증금 × 연 환산율 ÷ 12를 더한 월 환산비용을 쓰며, 연 환산율은 직접 조절할 수 있습니다.</p>
+        </section>
+        <section>
+          <span>03</span>
+          <h3>한계와 원자료를 함께 봅니다</h3>
+          <p>2022년 사용자 보유 자료의 거래·거리 집계만 최소 재현하며, 원본 Git blob과 관측일을 소스에 고정했습니다.</p>
+        </section>
+      </div>
+      <p class="method-caution">
+        두꺼비의 점수는 고정 후보 안의 탐색을 돕는 비교 지표이며 현재 시세, 주거 계약, 안전 또는 투자 결과를 보증하지 않습니다.
+        <a href="/dukkeobi/THIRD_PARTY_NOTICES.txt" target="_blank" rel="noopener noreferrer">오픈소스 고지</a>
+      </p>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <script src="/dukkeobi/runtime-config.js"></script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

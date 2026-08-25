@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -26,13 +30,23 @@ jobs:
       - name: Check out source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
+      - name: Set up Node.js 24
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
       - name: Verify Bonifacio return-link contract
         run: sh scripts/test-bonifacio-return-link.sh
+
+      - name: Verify static deployment contract
+        run: sh scripts/test-static-app.sh
 
       - name: Verify branch authentication contract
         id: auth
         env:
-          PORTFOLIO_BRANCH: ${{ github.ref_name }}
+          PORTFOLIO_BRANCH: ${{ github.base_ref || github.ref_name }}
         run: |
           set -eu
           scripts/test-portfolio-auth-mode.sh
@@ -48,7 +62,31 @@ jobs:
             printf 'EOF\n'
           } >> "$GITHUB_OUTPUT"
 
+      - name: Install static app dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Test and type-check static app
+        working-directory: app
+        run: |
+          npm test
+          npm run typecheck
+
+      - name: Build static app
+        working-directory: app
+        run: npm run build
+
+      - name: Build and smoke-test runtime container
+        run: |
+          docker build \
+            --build-arg PORTFOLIO_BRANCH=${{ steps.auth.outputs.branch }} \
+            --build-arg PORTFOLIO_AUTH_MODE=${{ steps.auth.outputs.mode }} \
+            --build-arg PORTFOLIO_BUILD=${{ github.sha }} \
+            -t dukkeobi:contract-test .
+          scripts/test-container.sh dukkeobi:contract-test
+
       - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
         with:
           registry: ghcr.io
@@ -56,24 +94,27 @@ jobs:
           password: ${{ github.token }}
 
       - name: Set up Buildx
+        if: github.event_name != 'pull_request'
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
       - name: Build and push ARM64 image
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
         with:
           context: .
-          file: source/Dukkeobi/Dockerfile
+          file: Dockerfile
           platforms: linux/arm64
           push: true
           build-args: |
             PORTFOLIO_BRANCH=${{ steps.auth.outputs.branch }}
             PORTFOLIO_AUTH_MODE=${{ steps.auth.outputs.mode }}
+            PORTFOLIO_BUILD=${{ github.sha }}
           tags: ${{ steps.auth.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
-    if: github.ref_name == 'main'
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
     needs: build
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
