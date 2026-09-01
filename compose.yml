@@ -21,6 +21,8 @@ services:
     read_only: true
     tmpfs:
       - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+    cpus: 0.75
+    cpu_shares: 512
     mem_limit: 128m
     mem_reservation: 32m
     pids_limit: 64
